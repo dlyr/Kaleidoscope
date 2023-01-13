@@ -43,8 +43,29 @@ struct GD32Props : kaleidoscope::driver::keyscanner::BaseProps {
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 template<typename _KeyScannerProps>
 class GD32 : public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
+ protected:
+  /*
+    each of these variables are storing the state for a row of keys
+
+    so for key 0, the counter is represented by db0[0] and db1[0]
+    and the state in debounced_state[0].
+  */
+  struct debounce_t {
+    typename _KeyScannerProps::RowState db0;              // counter bit 0
+    typename _KeyScannerProps::RowState db1;              // counter bit 1
+    typename _KeyScannerProps::RowState debounced_state;  // debounced state
+  };
+
+  struct row_state_t {
+    typename _KeyScannerProps::RowState previous;
+    typename _KeyScannerProps::RowState current;
+    debounce_t debouncer;
+  };
  private:
   typedef GD32<_KeyScannerProps> ThisType;
+  typedef _KeyScannerProps KeyScannerProps_;
+  static row_state_t matrix_state_[_KeyScannerProps::matrix_rows];
+  static uint32_t next_scan_at_;
 
  public:
   void setup() {
@@ -133,29 +154,8 @@ class GD32 : public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
   }
 
 
- protected:
-  /*
-    each of these variables are storing the state for a row of keys
-
-    so for key 0, the counter is represented by db0[0] and db1[0]
-    and the state in debounced_state[0].
-  */
-  struct debounce_t {
-    typename _KeyScannerProps::RowState db0;              // counter bit 0
-    typename _KeyScannerProps::RowState db1;              // counter bit 1
-    typename _KeyScannerProps::RowState debounced_state;  // debounced state
-  };
-
-  struct row_state_t {
-    typename _KeyScannerProps::RowState previous;
-    typename _KeyScannerProps::RowState current;
-    debounce_t debouncer;
-  };
 
  private:
-  typedef _KeyScannerProps KeyScannerProps_;
-  static row_state_t matrix_state_[_KeyScannerProps::matrix_rows];
-  static uint32_t next_scan_at_;
 
   /*
    * This function has loop unrolling disabled on purpose: we want to give the
