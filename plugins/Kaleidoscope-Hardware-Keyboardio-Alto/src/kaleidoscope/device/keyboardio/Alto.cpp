@@ -43,14 +43,14 @@ const uint8_t KeyScannerProps::matrix_rows;
 const uint8_t KeyScannerProps::matrix_columns;
 constexpr uint8_t KeyScannerProps::matrix_row_pins[matrix_rows];
 constexpr uint8_t KeyScannerProps::matrix_col_pins[matrix_columns];
-
-// `KeyScanner` here refers to the alias set up above, just like in the
-// `KeyScannerProps` case above.
+//
+//// `KeyScanner` here refers to the alias set up above, just like in the
+//// `KeyScannerProps` case above.
 template<>
 KeyScanner::row_state_t KeyScanner::matrix_state_[KeyScannerProps::matrix_rows] = {};
 
 template<>
-uint32_t	KeyScanner::next_scan_at_ = 0;
+uint32_t KeyScanner::next_scan_at_ = 0;
 
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD

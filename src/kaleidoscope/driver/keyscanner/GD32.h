@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>  // for uint16_t, uint8_t
+#include <stdint.h>  // for uint16_t, uint8_t, uint32_t
 #include "kaleidoscope/driver/keyscanner/Base.h"  // for BaseProps
 #include "kaleidoscope/driver/keyscanner/None.h"  // for None
 
@@ -28,7 +28,7 @@ namespace keyscanner {
 
 
 struct GD32Props : kaleidoscope::driver::keyscanner::BaseProps {
-  static const uint16_t keyscan_interval = 1500;
+  static const uint32_t keyscan_interval_micros = 1500;
   typedef uint16_t RowState;
 
   /*
@@ -93,9 +93,9 @@ class GD32 : public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     typename _KeyScannerProps::RowState any_debounced_changes = 0;
 
     for (uint8_t current_row = 0; current_row < _KeyScannerProps::matrix_rows; current_row++) {
-      digitalToggle(_KeyScannerProps::matrix_row_pins[current_row]);
+      digitalWrite(_KeyScannerProps::matrix_row_pins[current_row], LOW);
       typename _KeyScannerProps::RowState hot_pins = readCols();
-      digitalToggle(_KeyScannerProps::matrix_row_pins[current_row]);
+      digitalWrite(_KeyScannerProps::matrix_row_pins[current_row], HIGH);
 
 
       any_debounced_changes |= debounce(hot_pins, &matrix_state_[current_row].debouncer);
@@ -108,11 +108,11 @@ class GD32 : public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     }
   }
   void scanMatrix() {
-    if (
-		    millis()>= next_scan_at_) {
-      next_scan_at_ = millis()  + _KeyScannerProps::keyscan_interval;
+	uint32_t current_micros_ = micros();
+    if ( current_micros_ >= next_scan_at_) {
+      next_scan_at_ = current_micros_  + _KeyScannerProps::keyscan_interval_micros;
       readMatrix();
-    }
+   }
     actOnMatrixScan();
   }
 

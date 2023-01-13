@@ -137,10 +137,7 @@ enum {
   *
   * Then uncomment the line corresponding to the layout you want to use.
   *
-  */
-
-#define PRIMARY_KEYMAP_QWERTY
-// #define PRIMARY_KEYMAP_DVORAK
+  */ #define PRIMARY_KEYMAP_QWERTY // #define PRIMARY_KEYMAP_DVORAK
 // #define PRIMARY_KEYMAP_COLEMAK
 // #define PRIMARY_KEYMAP_CUSTOM
 
@@ -149,15 +146,17 @@ enum {
  *   so we can make the keymaps actually resemble the physical key layout better
  */
 // clang-format off
+KEYMAPS( [PRIMARY] = KEYMAP (
+Key_Esc, Key_1, Key_2, Key_3, Key_4, Key_5, Key_6, Key_7, Key_8, Key_9, Key_0, Key_Minus, Key_Equals, Key_Backslash, ___, Key_Delete,
+Key_Tab, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Y, Key_U, Key_I, Key_O, Key_P, Key_LeftBracket, Key_RightBracket, ___, Key_Backspace, ___,
+Key_LeftControl, Key_A, Key_S, Key_D, Key_F, Key_G, Key_H, Key_J, Key_K, Key_L, Key_Semicolon, Key_Quote, Key_Enter,___ ,
+___, Key_LeftShift, Key_Z, Key_X, Key_C, Key_V, Key_B, Key_N, Key_M, Key_Comma, Key_Period, Key_Slash, Key_RightShift, ___,
+	Key_Space) // XXX TODO where are our two missing keys in the list
 
-KEYMAPS(
-  [PRIMARY] = KEYMAP
-  (Key_A, ___, ___, ___,Key_A, ___, ___, ___,Key_A, ___, ___, ___,Key_A, ___, ___, ___,
-  Key_A, ___, ___, ___,Key_A, ___, ___, ___,Key_A, ___, ___, ___,Key_A, ___, ___, ___,
-Key_A, ___, ___, ___,Key_A, ___, ___, ___,Key_A, ___, ___, ___,Key_A, ___, ___, ___,
-Key_A, ___, ___, ___,Key_A, ___, ___, ___,Key_A, ___, ___, ___,Key_A, ___, ___, Key_A)
+
+
+
 ) // KEYMAPS(
-
 /* Re-enable astyle's indent enforcement */
 // clang-format on
 
