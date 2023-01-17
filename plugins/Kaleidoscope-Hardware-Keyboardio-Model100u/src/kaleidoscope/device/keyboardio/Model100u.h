@@ -35,7 +35,6 @@ struct cRGB {
 #include "kaleidoscope/driver/bootloader/gd32/Base.h"
 #include "kaleidoscope/driver/hid/Base.h"
 #include "kaleidoscope/driver/hid/Keyboardio.h"
-#include "kaleidoscope/driver/keyboardio/Model100uSide.h"
 #include "kaleidoscope/driver/keyscanner/Base.h"
 #include "kaleidoscope/driver/led/Base.h"
 #include "kaleidoscope/driver/mcu/GD32.h"
@@ -51,35 +50,6 @@ struct Model100uStorageProps : public kaleidoscope::driver::storage::GD32FlashPr
 };
 
 
-struct Model100uLEDDriverProps : public kaleidoscope::driver::led::BaseProps {
-  static constexpr uint8_t led_count             = 64;
-  static constexpr uint8_t key_led_map[] PROGMEM = {
-    // clang-format off
-    3, 4, 11, 12, 19, 20, 26, 27,     36, 37, 43, 44, 51, 52, 59, 60,
-    2, 5, 10, 13, 18, 21, 25, 28,     35, 38, 42, 45, 50, 53, 58, 61,
-    1, 6, 9,  14, 17, 22, 24, 29,     34, 39, 41, 46, 49, 54, 57, 62,
-    0, 7, 8,  15, 16, 23, 31, 30,     33, 32, 40, 47, 48, 55, 56, 63,
-    // clang-format on
-  };
-};
-
-#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class Model100uLEDDriver : public kaleidoscope::driver::led::Base<Model100LEDDriverProps> {
- public:
-  static void syncLeds();
-  static void setCrgbAt(uint8_t i, cRGB crgb);
-  static cRGB getCrgbAt(uint8_t i);
-  static void setBrightness(uint8_t brightness);
-  static uint8_t getBrightness();
-
-  static void enableHighPowerLeds();
-
- private:
-  static bool isLEDChanged;
-};
-#else   // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class Model100uLEDDriver;
-#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 struct Model100uKeyScannerProps : public kaleidoscope::driver::keyscanner::BaseProps {
   static constexpr uint8_t matrix_rows    = 4;
@@ -88,7 +58,7 @@ struct Model100uKeyScannerProps : public kaleidoscope::driver::keyscanner::BaseP
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class Model100uKeyScanner : public kaleidoscope::driver::keyscanner::Base<Model100KeyScannerProps> {
+class Model100uKeyScanner : public kaleidoscope::driver::keyscanner::Base<Model100uKeyScannerProps> {
  private:
   typedef Model100uKeyScanner ThisType;
 
@@ -105,16 +75,9 @@ class Model100uKeyScanner : public kaleidoscope::driver::keyscanner::Base<Model1
   static uint8_t previousPressedKeyswitchCount();
 
   static void setKeyscanInterval(uint8_t interval);
-  static void enableScannerPower();
-  static void disableScannerPower();
 
  protected:
-  static driver::keyboardio::keydata_t leftHandState;
-  static driver::keyboardio::keydata_t rightHandState;
-  static driver::keyboardio::keydata_t previousLeftHandState;
-  static driver::keyboardio::keydata_t previousRightHandState;
 
-  static void actOnHalfRow(uint8_t row, uint8_t colState, uint8_t colPrevState, uint8_t startPos);
 };
 #else   // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class Model100uKeyScanner;
@@ -147,7 +110,7 @@ struct Model100uProps : public kaleidoscope::device::BaseProps {
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-class Model100u : public kaleidoscope::device::Base<Model100Props> {
+class Model100u : public kaleidoscope::device::Base<Model100uProps> {
  public:
   void setup();
 
