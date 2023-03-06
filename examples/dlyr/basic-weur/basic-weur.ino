@@ -115,8 +115,28 @@ enum {
 };  // layers
 
 
-constexpr Key Key_E_ACUTE{kaleidoscope::ranges::SAFE_START};
-constexpr Key Key_E_CIRC{kaleidoscope::ranges::SAFE_START + 1};
+constexpr Key Key_A_CIRC     {kaleidoscope::ranges::SAFE_START};
+constexpr Key Key_A_ACUTE    {Key_A_CIRC .getRaw() + 1};
+constexpr Key Key_A_GRAV     {Key_A_ACUTE.getRaw() + 1};
+constexpr Key Key_A_UML      {Key_A_GRAV .getRaw() + 1};
+constexpr Key Key_E_CIRC     {Key_A_UML  .getRaw() + 1};
+constexpr Key Key_E_ACUTE    {Key_E_CIRC .getRaw() + 1};
+constexpr Key Key_E_GRAV     {Key_E_ACUTE.getRaw() + 1};
+constexpr Key Key_E_UML      {Key_E_GRAV .getRaw() + 1};
+constexpr Key Key_I_CIRC     {Key_E_UML  .getRaw() + 1};
+constexpr Key Key_I_ACUTE    {Key_I_CIRC .getRaw() + 1};
+constexpr Key Key_I_GRAV     {Key_I_ACUTE.getRaw() + 1};
+constexpr Key Key_I_UML      {Key_I_GRAV .getRaw() + 1};
+constexpr Key Key_O_CIRC     {Key_I_UML  .getRaw() + 1};
+constexpr Key Key_O_ACUTE    {Key_O_CIRC .getRaw() + 1};
+constexpr Key Key_O_GRAV     {Key_O_ACUTE.getRaw() + 1};
+constexpr Key Key_O_UML      {Key_O_GRAV .getRaw() + 1};
+constexpr Key Key_U_CIRC     {Key_O_UML  .getRaw() + 1};
+constexpr Key Key_U_ACUTE    {Key_U_CIRC .getRaw() + 1};
+constexpr Key Key_U_GRAV     {Key_U_ACUTE.getRaw() + 1};
+constexpr Key Key_U_UML      {Key_U_GRAV .getRaw() + 1};
+constexpr Key Key_C_CEDIL    {Key_U_UML  .getRaw() + 1};
+constexpr Key Key_O_ELIG     {Key_C_CEDIL.getRaw() + 1};
 
 struct KeyToUnicode {
   Key key;
@@ -568,8 +588,8 @@ KALEIDOSCOPE_INIT_PLUGINS(
 void setup() {
   // First, call Kaleidoscope's internal setup function
   Kaleidoscope.setup();
-  Sticky.setTimeout(500);
-  Sticky.setDoubleTapTimeout(2500);
+  OneShot.setTimeout(500);
+  OneShot.setDoubleTapTimeout(2500);
 
   // Set the hue of the boot greeting effect to something that will result in a
   // nice green color.
