@@ -109,34 +109,35 @@
 
 enum {
   PRIMARY,
+  ALTERNATIVE,
   WEUR,
   SYMBOLS,
   NUMNAV
 };  // layers
 
 
-constexpr Key Key_A_CIRC     {kaleidoscope::ranges::SAFE_START};
-constexpr Key Key_A_ACUTE    {Key_A_CIRC .getRaw() + 1};
-constexpr Key Key_A_GRAV     {Key_A_ACUTE.getRaw() + 1};
-constexpr Key Key_A_UML      {Key_A_GRAV .getRaw() + 1};
-constexpr Key Key_E_CIRC     {Key_A_UML  .getRaw() + 1};
-constexpr Key Key_E_ACUTE    {Key_E_CIRC .getRaw() + 1};
-constexpr Key Key_E_GRAV     {Key_E_ACUTE.getRaw() + 1};
-constexpr Key Key_E_UML      {Key_E_GRAV .getRaw() + 1};
-constexpr Key Key_I_CIRC     {Key_E_UML  .getRaw() + 1};
-constexpr Key Key_I_ACUTE    {Key_I_CIRC .getRaw() + 1};
-constexpr Key Key_I_GRAV     {Key_I_ACUTE.getRaw() + 1};
-constexpr Key Key_I_UML      {Key_I_GRAV .getRaw() + 1};
-constexpr Key Key_O_CIRC     {Key_I_UML  .getRaw() + 1};
-constexpr Key Key_O_ACUTE    {Key_O_CIRC .getRaw() + 1};
-constexpr Key Key_O_GRAV     {Key_O_ACUTE.getRaw() + 1};
-constexpr Key Key_O_UML      {Key_O_GRAV .getRaw() + 1};
-constexpr Key Key_U_CIRC     {Key_O_UML  .getRaw() + 1};
-constexpr Key Key_U_ACUTE    {Key_U_CIRC .getRaw() + 1};
-constexpr Key Key_U_GRAV     {Key_U_ACUTE.getRaw() + 1};
-constexpr Key Key_U_UML      {Key_U_GRAV .getRaw() + 1};
-constexpr Key Key_C_CEDIL    {Key_U_UML  .getRaw() + 1};
-constexpr Key Key_O_ELIG     {Key_C_CEDIL.getRaw() + 1};
+constexpr Key Key_A_CIRC{kaleidoscope::ranges::SAFE_START};
+constexpr Key Key_A_ACUTE{Key_A_CIRC.getRaw() + 1};
+constexpr Key Key_A_GRAV{Key_A_ACUTE.getRaw() + 1};
+constexpr Key Key_A_UML{Key_A_GRAV.getRaw() + 1};
+constexpr Key Key_E_CIRC{Key_A_UML.getRaw() + 1};
+constexpr Key Key_E_ACUTE{Key_E_CIRC.getRaw() + 1};
+constexpr Key Key_E_GRAV{Key_E_ACUTE.getRaw() + 1};
+constexpr Key Key_E_UML{Key_E_GRAV.getRaw() + 1};
+constexpr Key Key_I_CIRC{Key_E_UML.getRaw() + 1};
+constexpr Key Key_I_ACUTE{Key_I_CIRC.getRaw() + 1};
+constexpr Key Key_I_GRAV{Key_I_ACUTE.getRaw() + 1};
+constexpr Key Key_I_UML{Key_I_GRAV.getRaw() + 1};
+constexpr Key Key_O_CIRC{Key_I_UML.getRaw() + 1};
+constexpr Key Key_O_ACUTE{Key_O_CIRC.getRaw() + 1};
+constexpr Key Key_O_GRAV{Key_O_ACUTE.getRaw() + 1};
+constexpr Key Key_O_UML{Key_O_GRAV.getRaw() + 1};
+constexpr Key Key_U_CIRC{Key_O_UML.getRaw() + 1};
+constexpr Key Key_U_ACUTE{Key_U_CIRC.getRaw() + 1};
+constexpr Key Key_U_GRAV{Key_U_ACUTE.getRaw() + 1};
+constexpr Key Key_U_UML{Key_U_GRAV.getRaw() + 1};
+constexpr Key Key_C_CEDIL{Key_U_UML.getRaw() + 1};
+constexpr Key Key_O_ELIG{Key_C_CEDIL.getRaw() + 1};
 
 struct KeyToUnicode {
   Key key;
@@ -179,20 +180,74 @@ static constexpr uint32_t keyToUnicode(const Key &key) {
 
 namespace kaleidoscope {
 namespace plugin {
+// When activated, this plugin will suppress any `shift` key (including modifier
+// combos with `shift` a flag) before it's added to the HID report.
+class ShiftBlocker : public Plugin {
+
+ public:
+  EventHandlerResult onAddToReport(Key key) {
+    if (active_ && key.isKeyboardShift())
+      return EventHandlerResult::ABORT;
+    return EventHandlerResult::OK;
+  }
+
+  void enable() {
+    active_ = true;
+  }
+  void disable() {
+    active_ = false;
+  }
+
+ private:
+  bool active_{false};
+};
+}  // namespace plugin
+}  // namespace kaleidoscope
+
+kaleidoscope::plugin::ShiftBlocker ShiftBlocker;
+
+namespace kaleidoscope {
+namespace plugin {
 
 class WeurPlugin : public Plugin {
  public:
-  EventHandlerResult onKeyEvent(KeyEvent &event) {
-    uint32_t converted = keyToUnicode(event.key);
-    if (converted == 0) return EventHandlerResult::OK;
-    if (keyToggledOn(event.state)) {
-      ::Unicode.type(converted);
+  static constexpr uint32_t upperOffset = 0x00E0 - 0x00C0;
+
+  bool isShiftKeyHeld(Key &which) {
+    for (Key key : kaleidoscope::live_keys.all()) {
+      if (key.isKeyboardShift()) {
+          which = key;
+          return true;
+      }
     }
+    return false;
+  }
+
+  EventHandlerResult onKeyEvent(KeyEvent &event) {
+
+    uint32_t converted = keyToUnicode(event.key);
+
+    if (converted == 0) return EventHandlerResult::OK;
+
+    if (keyToggledOn(event.state)) {
+      Key shiftKey;
+      if (isShiftKeyHeld(shiftKey)) {
+        kaleidoscope::Runtime.hid().keyboard().releaseRawKey(shiftKey);
+        kaleidoscope::Runtime.hid().keyboard().sendReport();
+        ::Unicode.type(converted - upperOffset);
+        kaleidoscope::Runtime.hid().keyboard().pressRawKey(shiftKey);
+        kaleidoscope::Runtime.hid().keyboard().sendReport();
+      } else {
+        ::Unicode.type(converted);
+      }
+    }
+
     return EventHandlerResult::ABORT;
   }
 };
 }  // namespace plugin
 }  // namespace kaleidoscope
+
 kaleidoscope::plugin::WeurPlugin WeurPlugin;
 
 /**
@@ -221,82 +276,48 @@ kaleidoscope::plugin::WeurPlugin WeurPlugin;
 
 KEYMAPS(
 
-#if defined (PRIMARY_KEYMAP_QWERTY)
   [PRIMARY] = KEYMAP_STACKED
-  (___, Key_1, Key_2, Key_3, Key_4, Key_5, Key_LEDEffectNext,
+  (___, Key_1, Key_2, Key_3, Key_4, Key_5, Key_OneShotCancel,
    Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
    Key_PageUp,   Key_A, Key_S, Key_D, Key_F, Key_G,
    Key_PageDown, Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
    OSL(SYMBOLS), Key_Backspace, Key_LeftControl, Key_LeftShift,
    ShiftToLayer(NUMNAV),
 
-   Key_RightAlt,  Key_6, Key_7, Key_8,     Key_9,         Key_0,        ___ ,
+   Key_RightAlt,  Key_6, Key_7, Key_8,     Key_9,         Key_0,         Key_LEDEffectNext,
    Key_Enter,     Key_Y, Key_U, Key_I,     Key_O,         Key_P,         Key_Equals,
                   Key_H, Key_J, Key_K,     Key_L,         Key_Semicolon, Key_Quote,
    Key_CapsLock,  Key_N, Key_M, Key_Comma, Key_Period,    Key_Slash,     Key_Minus,
-      Key_LeftGui, OSM(LeftAlt), Key_Spacebar, OSM(RightShift),
+   Key_LeftGui,   OSM(LeftAlt), Key_Spacebar, OSM(RightShift),
    ShiftToLayer(WEUR)),
 
-#elif defined (PRIMARY_KEYMAP_DVORAK)
-
-  [PRIMARY] = KEYMAP_STACKED
-  (___,          Key_1,         Key_2,     Key_3,      Key_4, Key_5, Key_LEDEffectNext,
+  [ALTERNATIVE] = KEYMAP_STACKED
+  (___,          Key_1,         Key_2,     Key_3,      Key_4, Key_5, Key_OneShotCancel,
    Key_Backtick, Key_Quote,     Key_Comma, Key_Period, Key_P, Key_Y, Key_Tab,
    Key_PageUp,   Key_A,         Key_O,     Key_E,      Key_U, Key_I,
    Key_PageDown, Key_Semicolon, Key_Q,     Key_J,      Key_K, Key_X, Key_Escape,
-   Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,
+   OSL(SYMBOLS), Key_Backspace, Key_LeftControl, Key_LeftShift,
    ShiftToLayer(NUMNAV),
 
-#elif defined (PRIMARY_KEYMAP_COLEMAK)
+   Key_RightAlt,   Key_6, Key_7, Key_8, Key_9, Key_0,  Key_OneShotCancel,
+   Key_Enter,      Key_F, Key_G, Key_C, Key_R, Key_L, Key_Slash,
+                   Key_D, Key_H, Key_T, Key_N, Key_S, Key_Minus,
+   Key_CapsLock,   Key_B, Key_M, Key_W, Key_V, Key_Z, Key_Equals,
+   Key_LeftGui,   OSM(LeftAlt), Key_Spacebar, OSM(RightShift),
+   ShiftToLayer(WEUR)),
 
-  [PRIMARY] = KEYMAP_STACKED
-  (___,          Key_1, Key_2, Key_3, Key_4, Key_5, Key_LEDEffectNext,
-   Key_Backtick, Key_Q, Key_W, Key_F, Key_P, Key_B, Key_Tab,
-   Key_PageUp,   Key_A, Key_R, Key_S, Key_T, Key_G,
-   Key_PageDown, Key_Z, Key_X, Key_C, Key_D, Key_V, Key_Escape,
-   Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,
-   ShiftToLayer(NUMNAV),
-
-   ___,  Key_6, Key_7, Key_8,     Key_9,         Key_0,         ___              ,
-   Key_Enter,     Key_J, Key_L, Key_U,     Key_Y,         Key_Semicolon, Key_Equals,
-                  Key_M, Key_N, Key_E,     Key_I,         Key_O,         Key_Quote,
-   Key_RightAlt,  Key_K, Key_H, Key_Comma, Key_Period,    Key_Slash,     Key_Minus,
-   Key_RightShift, Key_LeftAlt, Key_Spacebar, Key_RightControl,
-   ShiftToLayer(NUMNAV)),
-
-#elif defined (PRIMARY_KEYMAP_CUSTOM)
-  // Edit this keymap to make a custom layout
-  [PRIMARY] = KEYMAP_STACKED
-  (___,          Key_1, Key_2, Key_3, Key_4, Key_5, Key_LEDEffectNext,
-   Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
-   Key_PageUp,   Key_A, Key_S, Key_D, Key_F, Key_G,
-   Key_PageDown, Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
-   Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,
-   ShiftToLayer(NUMNAV),
-
-  ___,  Key_6, Key_7, Key_8,     Key_9,         Key_0,         ___              ,
-   Key_Enter,     Key_Y, Key_U, Key_I,     Key_O,         Key_P,         Key_Equals,
-                  Key_H, Key_J, Key_K,     Key_L,         Key_Semicolon, Key_Quote,
-   Key_RightAlt,  Key_N, Key_M, Key_Comma, Key_Period,    Key_Slash,     Key_Minus,
-   Key_RightShift, Key_LeftAlt, Key_Spacebar, Key_RightControl,
-   ShiftToLayer(NUMNAV)),
-#else
-
-#error "No default keymap defined. You should make sure that you have a line like '#define PRIMARY_KEYMAP_QWERTY' in your sketch"
-
-#endif
  [WEUR]= KEYMAP_STACKED
       (
    ___                  , ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
-   ___                  , ___                  , ___                  , Key_E_UML  , Key_E_GRAV                  , ___                  , ___                  ,
-   ___                  , ___                  , ___                  , Key_E_ACUTE        , Key_E_CIRC                 , Key_U_CIRC                  ,
-   ___                  , Key_A_UML                  , Key_A_GRAV                  , ___                  , ___                  , ___                  , ___                  ,
-   ___                  , Key_A_ACUTE                  , Key_A_CIRC                  , Key_C_CEDIL                  ,
+   ___                  , ___                  , ___                  , Key_E_UML            , Key_E_GRAV           , ___                  , ___                  ,
+   ___                  , Key_A_UML            , Key_A_GRAV           , Key_E_ACUTE          , Key_E_CIRC           , Key_U_CIRC           ,
+   ___                  , Key_A_ACUTE          , Key_A_CIRC           , Key_C_CEDIL          , ___                  , ___                  , ___                  ,
+   ___                  , ___                  , ___                  , ___                  ,
    ___                  ,
 
    ___                  , ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
-   ___                  , Key_U_GRAV           , Key_U_UML            , Key_I_UML            ,Key_O_UML             , ___                  , ___                  ,
-                          ___                  , ___                  , ___                  , ___                  , Key_O_CIRC            , ___                  ,
+   ___                  , Key_U_GRAV           , Key_U_UML            , Key_I_UML            , Key_O_UML            , ___                  , ___                  ,
+                          ___                  , ___                  , ___                  , ___                  , Key_O_CIRC           , ___                  ,
    ___                  , ___                  , ___                  , ___                  , Key_O_ELIG           , ___                  , ___                  ,
    ___                  , ___                  , Key_Enter            , ___                  ,
    ___
@@ -322,14 +343,14 @@ KEYMAPS(
   (___,            Key_F1,  Key_F2,      Key_F3,      Key_F4,        Key_F5,           Key_CapsLock,
   Key_Tab,         Key_1,   Key_2,       Key_3,       Key_4,         Key_5,             ___,
   ___,             ___,     Key_Home,    Key_PageUp,  Key_End,       ___,
-  Key_PrintScreen, ___,      Key_Insert,    Key_PageDown, ___,          ___,               ___,
+  Key_PrintScreen, ___,     Key_Insert,  Key_PageDown, ___,          ___,               ___,
   ___,             Key_Delete, ___,      ___,
   ___,
 
-  Consumer_ScanPreviousTrack, Key_F6,        Key_F7,        Key_F8,      Key_F9,         Key_F10, Key_F11,
-      Consumer_ScanNextTrack,     Key_6,  Key_7,         Key_8,       Key_9,          Key_0,  Key_F12,
-                               ___,   Key_LeftArrow, Key_UpArrow, Key_RightArrow, Key_Period, Key_Comma,
-  Key_Menu,                   Consumer_Mute,   Consumer_VolumeDecrement, Key_DownArrow, Consumer_VolumeIncrement, Consumer_PlaySlashPause, Consumer_Stop,
+  Consumer_ScanPreviousTrack, Key_F6,        Key_F7,                   Key_F8,        Key_F9,                   Key_F10,                 Key_F11,
+  Consumer_ScanNextTrack,     Key_6,         Key_7,                    Key_8,         Key_9,                    Key_0,                   Key_F12,
+                               ___,          Key_LeftArrow,            Key_UpArrow,   Key_RightArrow,           Key_Period,              Key_Comma,
+  Key_Menu,                   Consumer_Mute, Consumer_VolumeDecrement, Key_DownArrow, Consumer_VolumeIncrement, Consumer_PlaySlashPause, Consumer_Stop,
   ___, ___, Key_Space, ___,
   ___),
 
@@ -358,7 +379,6 @@ const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
 // These 'solid' color effect definitions define a rainbow of
 // LED color modes calibrated to draw 500mA or less on the
 // Keyboardio Model 100.
-
 
 static kaleidoscope::plugin::LEDSolidColor solidRed(160, 0, 0);
 static kaleidoscope::plugin::LEDSolidColor solidOrange(140, 70, 0);
@@ -617,6 +637,9 @@ void setup() {
   // If there's a default layer set in EEPROM, we should set that as the default
   // here.
   Layer.move(EEPROMSettings.default_layer());
+
+  // use PROGMEM when boot for now
+  Layer.getKey = Layer.getKeyFromPROGMEM;
 
   // To avoid any surprises, SpaceCadet is turned off by default. However, it
   // can be permanently enabled via Chrysalis, so we should only disable it if
