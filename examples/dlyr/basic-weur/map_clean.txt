@@ -20,3 +20,56 @@
    ___
 // END KBD
 ),
+
+
+
+  [NUMNAV] = KEYMAP_STACKED
+  (___,            Key_F1,  Key_F2,      Key_F3,      Key_F4,        Key_F5,           Key_CapsLock,
+  Key_Tab,         Key_1,   Key_2,       Key_3,       Key_4,         Key_5,             ___,
+  ___,             ___,     Key_Home,    Key_PageUp,  Key_End,       ___,
+  Key_PrintScreen, ___,      Key_Ins,    Key_PageDown, ___,          ___,               ___,
+  ___,             Key_Delete, ___,      ___,
+  ___,
+
+  Consumer_ScanPreviousTrack, Key_F6, Key_F7,        Key_F8,      Key_F9,         Key_F10, Key_F11,
+  Consumer_ScanNextTrack,     Key_6,  Key_7,         Key_8,       Key_9,          Key_0,  Key_F12,
+                               ___,   Key_LeftArrow, Key_UpArrow, Key_RightArrow, Key_Period, Key_Comma,
+  Key_Menu,                   Consumer_Mute,   Consumer_VolumeDecrement, Key_DownArrow, Consumer_VolumeIncrement, Consumer_PlaySlashPause, Consumer_Stop,
+  ___, ___, Space, ___,
+  ___),
+[SYMBOLS] =  KEYMAP_STACKED
+(//
+        ___                  , Key_ExclamationMark        , Key_LessThan    , Key_Equal            , Key_GreaterThanSHIFT   ,        Key_Minus     , ___                  ,
+        ___                  , Key_BackSlash        , Key_LeftParen        , Key_Dollar        , Key_RightParen       , Key_Plus             , ___                  ,
+        ___                  , Key_Asterisk        , Key_At        , Key_Colon                  , Key_Slash                  ,Key_Pound                  , // MIDDLE LARGER
+   ___                  , ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
+   // LEFT THUMB
+   ___                  , ___                  , ___                  , ___                  ,
+   // LEFT PALM
+   ___                  ,
+// END FIRST HALF
+   ___                  , ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
+   ___                  , Key_Carat            , Key_LeftBracket      , Key_Underscore       , Key_RightBracket     , Key_DoubleQuote      , ___                  ,
+ /* MIDDLE LARGER */    , Key_Percent          , Key_LeftCurlyBracket , Key_SemiColon        , Key_RightCurlyBracket, Key_Quote            , ___                  ,
+   ___                  , Key_BackTick         , Key_Pipe             , Key_Tilde            , Key_Ampersand        , Key_QuestionMark     , ___                  ,
+   // RIGHT THUMB
+   ___                  , ___                  , ___                  , ___                  ,
+   // RIGHT PALM
+   ___
+// END KBD
+)
+(
+   ___                  , ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
+   ___                  , ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
+   ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
+   ___                  , ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
+   ___                  , ___                  , ___                  , ___                  ,
+   ___                  ,
+   
+   ___                  , ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
+   ___                  , ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
+                          ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
+   ___                  , ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
+   ___                  , ___                  , ___                  , ___                  ,
+   ___
+)
