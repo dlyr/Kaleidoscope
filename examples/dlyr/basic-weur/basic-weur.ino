@@ -13,78 +13,34 @@
 // Support for storing the keymap in EEPROM
 #include "Kaleidoscope-EEPROM-Settings.h"
 #include "Kaleidoscope-EEPROM-Keymap.h"
-
-// Support for communicating with the host via a simple Serial protocol
 #include "Kaleidoscope-FocusSerial.h"
-
-// Support for querying the firmware version via Focus
 #include "Kaleidoscope-FirmwareVersion.h"
-
-// Support for keys that move the mouse
-#include "Kaleidoscope-MouseKeys.h"
-
-// Support for macros
+//#include "Kaleidoscope-MouseKeys.h"
 #include "Kaleidoscope-Macros.h"
-
-// Support for controlling the keyboard's LEDs
 #include "Kaleidoscope-LEDControl.h"
-
-// Support for the "Boot greeting" effect, which pulses the 'LED' button for 10s
-// when the keyboard is connected to a computer (or that computer is powered on)
-#include "Kaleidoscope-LEDEffect-BootGreeting.h"
-
-// Support for LED modes that set all LEDs to a single color
+//#include "Kaleidoscope-LEDEffect-BootGreeting.h"
 #include "Kaleidoscope-LEDEffect-SolidColor.h"
-
-// Support for shared palettes for other plugins, like Colormap below
 #include "Kaleidoscope-LED-Palette-Theme.h"
-
-// Support for an LED mode that lets one configure per-layer color maps
-#include "Kaleidoscope-Colormap.h"
-
-// Support for turning the LEDs off after a certain amount of time
+//#include "Kaleidoscope-Colormap.h"
 #include "Kaleidoscope-IdleLEDs.h"
-
-// Support for setting and saving the default LED mode
 #include "Kaleidoscope-DefaultLEDModeConfig.h"
-
-// Support for changing the brightness of the LEDs
 #include "Kaleidoscope-LEDBrightnessConfig.h"
-
-// Support for Keyboardio's internal keyboard testing mode
 #include "Kaleidoscope-HardwareTestMode.h"
-
-// Support for host power management (suspend & wakeup)
 #include "Kaleidoscope-HostPowerManagement.h"
-
-// Support for magic combos (key chords that trigger an action)
 #include "Kaleidoscope-MagicCombo.h"
-
-// Support for USB quirks, like changing the key state report protocol
 #include "Kaleidoscope-USB-Quirks.h"
-
-// Support for secondary actions on keys
 #include "Kaleidoscope-Qukeys.h"
-
-// Support for one-shot modifiers and layer keys
 #include "Kaleidoscope-OneShot.h"
 #include "Kaleidoscope-Escape-OneShot.h"
-
-// Support for dynamic, Chrysalis-editable macros
 #include "Kaleidoscope-DynamicMacros.h"
-
-// Support for SpaceCadet keys
-#include "Kaleidoscope-SpaceCadet.h"
-
-// Support for editable layer names
+//#include "Kaleidoscope-SpaceCadet.h"
 #include "Kaleidoscope-LayerNames.h"
-
-// Support for the GeminiPR Stenography protocol
 #include "Kaleidoscope-Steno.h"
 
 #include <Kaleidoscope-HostOS.h>
 #include <Kaleidoscope-Unicode.h>
-
+#include <Kaleidoscope-LED-ActiveLayerColor.h>
+#include <Kaleidoscope-LED-ActiveModColor.h>
 
 #define Key_ExclamationPoint LSHIFT(Key_1)
 #define Key_At LSHIFT(Key_2)
@@ -109,12 +65,12 @@
 
 enum {
   PRIMARY,
-  ALTERNATIVE,
+  DVORAK,
+  COLEMAK,
   WEUR,
   SYMBOLS,
   NUMNAV
 };  // layers
-
 
 constexpr Key Key_A_CIRC{kaleidoscope::ranges::SAFE_START};
 constexpr Key Key_A_ACUTE{Key_A_CIRC.getRaw() + 1};
@@ -216,8 +172,8 @@ class WeurPlugin : public Plugin {
   bool isShiftKeyHeld(Key &which) {
     for (Key key : kaleidoscope::live_keys.all()) {
       if (key.isKeyboardShift()) {
-          which = key;
-          return true;
+        which = key;
+        return true;
       }
     }
     return false;
@@ -277,11 +233,11 @@ kaleidoscope::plugin::WeurPlugin WeurPlugin;
 KEYMAPS(
 
   [PRIMARY] = KEYMAP_STACKED
-  (___, Key_1, Key_2, Key_3, Key_4, Key_5, Key_OneShotCancel,
-   Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
-   Key_PageUp,   Key_A, Key_S, Key_D, Key_F, Key_G,
-   Key_PageDown, Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
-   OSL(SYMBOLS), Key_Backspace, Key_LeftControl, Key_LeftShift,
+  (___,                 Key_1, Key_2, Key_3, Key_4, Key_5, Key_OneShotCancel,
+   Key_Backtick,        Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
+   Key_Tab,             Key_A, Key_S, Key_D, Key_F, Key_G,
+LockLayer(COLEMAK),     Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
+   OSL(SYMBOLS), Key_Backspace, OSM(LeftControl), OSM(LeftShift),
    ShiftToLayer(NUMNAV),
 
    Key_RightAlt,  Key_6, Key_7, Key_8,     Key_9,         Key_0,         Key_LEDEffectNext,
@@ -291,21 +247,34 @@ KEYMAPS(
    Key_LeftGui,   OSM(LeftAlt), Key_Spacebar, OSM(RightShift),
    ShiftToLayer(WEUR)),
 
-  [ALTERNATIVE] = KEYMAP_STACKED
-  (___,          Key_1,         Key_2,     Key_3,      Key_4, Key_5, Key_OneShotCancel,
-   Key_Backtick, Key_Quote,     Key_Comma, Key_Period, Key_P, Key_Y, Key_Tab,
-   Key_PageUp,   Key_A,         Key_O,     Key_E,      Key_U, Key_I,
-   Key_PageDown, Key_Semicolon, Key_Q,     Key_J,      Key_K, Key_X, Key_Escape,
-   OSL(SYMBOLS), Key_Backspace, Key_LeftControl, Key_LeftShift,
-   ShiftToLayer(NUMNAV),
+  [DVORAK] = KEYMAP_STACKED
+  (___,          ___,         ___, ___ , ___, ___,  ___,
+   ___,             Key_Quote,     Key_Comma, Key_Period, Key_P, Key_Y, ___,
+   ___,             Key_A,         Key_O,     Key_E,      Key_U, Key_I,
+LockLayer(PRIMARY), Key_Semicolon, Key_Q,     Key_J,      Key_K, Key_X, ___,
+   ___, ___, ___, ___,
+   ___,
 
-   Key_RightAlt,   Key_6, Key_7, Key_8, Key_9, Key_0,  Key_OneShotCancel,
-   Key_Enter,      Key_F, Key_G, Key_C, Key_R, Key_L, Key_Slash,
-                   Key_D, Key_H, Key_T, Key_N, Key_S, Key_Minus,
-   Key_CapsLock,   Key_B, Key_M, Key_W, Key_V, Key_Z, Key_Equals,
-   Key_LeftGui,   OSM(LeftAlt), Key_Spacebar, OSM(RightShift),
-   ShiftToLayer(WEUR)),
+   ___,          ___,         ___, ___ , ___, ___,  ___,
+   ___,      Key_F, Key_G, Key_C, Key_R, Key_L, Key_Slash,
+             Key_D, Key_H, Key_T, Key_N, Key_S, Key_Minus,
+   ___,      Key_B, Key_M, Key_W, Key_V, Key_Z, Key_Equals,
+   ___, ___, ___, ___,
+      ___),
+ [COLEMAK] = KEYMAP_STACKED
+  (___,          ___,         ___, ___ , ___, ___,  ___,
+   ___,              Key_Q, Key_W, Key_F, Key_P, Key_B, ___,
+   ___,              Key_A, Key_R, Key_S, Key_T, Key_G,
+LockLayer(DVORAK),  Key_Z, Key_X, Key_C, Key_D, Key_V, ___,
+   ___, ___, ___, ___,
+   ___,
 
+   ___,          ___,         ___, ___ , ___, ___,  ___,
+   ___,      Key_J, Key_L, Key_U,     Key_Y,         Key_Semicolon, Key_Equals,
+             Key_M, Key_N, Key_E,     Key_I,         Key_O,         Key_Quote,
+   ___,      Key_K, Key_H, Key_Comma, Key_Period,    Key_Slash,     Key_Minus,
+   ___, ___, ___, ___,
+      ___),
  [WEUR]= KEYMAP_STACKED
       (
    ___                  , ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
@@ -380,13 +349,14 @@ const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
 // LED color modes calibrated to draw 500mA or less on the
 // Keyboardio Model 100.
 
-static kaleidoscope::plugin::LEDSolidColor solidRed(160, 0, 0);
-static kaleidoscope::plugin::LEDSolidColor solidOrange(140, 70, 0);
-static kaleidoscope::plugin::LEDSolidColor solidYellow(130, 100, 0);
-static kaleidoscope::plugin::LEDSolidColor solidGreen(0, 160, 0);
-static kaleidoscope::plugin::LEDSolidColor solidBlue(0, 70, 130);
-static kaleidoscope::plugin::LEDSolidColor solidIndigo(0, 0, 170);
-static kaleidoscope::plugin::LEDSolidColor solidViolet(130, 0, 120);
+//static kaleidoscope::plugin::LEDSolidColor solidRed(160, 0, 0);
+//static kaleidoscope::plugin::LEDSolidColor solidOrange(140, 70, 0);
+//static kaleidoscope::plugin::LEDSolidColor solidYellow(130, 100, 0);
+//static kaleidoscope::plugin::LEDSolidColor solidGreen(0, 160, 0);
+//static kaleidoscope::plugin::LEDSolidColor solidBlue(0, 70, 130);
+//static kaleidoscope::plugin::LEDSolidColor solidIndigo(0, 0, 170);
+//static kaleidoscope::plugin::LEDSolidColor solidViolet(130, 0, 120);
+//
 
 /** toggleLedsOnSuspendResume toggles the LEDs off when the host goes to sleep,
  * and turns them back on when it wakes up.
@@ -520,26 +490,26 @@ KALEIDOSCOPE_INIT_PLUGINS(
   // SpaceCadet can turn your shifts into parens on tap, while keeping them as
   // Shifts when held. SpaceCadetConfig lets Chrysalis configure some aspects of
   // the plugin.
-  SpaceCadet,
-  SpaceCadetConfig,
+  //SpaceCadet,
+  //SpaceCadetConfig,
 
   // Enables the "Sticky" behavior for modifiers, and the "Layer shift when
   // held" functionality for layer keys.
   OneShot,
-  OneShotConfig,
+  //OneShotConfig,
   EscapeOneShot,
-  EscapeOneShotConfig,
+  //EscapeOneShotConfig,
 
   // The macros plugin adds support for macros
   Macros,
   Unicode,
   WeurPlugin,
   // Enables dynamic, Chrysalis-editable macros.
-  DynamicMacros,
+  //  DynamicMacros,
 
   // The MouseKeys plugin lets you add keys to your keymap which move the mouse.
-  MouseKeys,
-  MouseKeysConfig,
+  //  MouseKeys,
+  // MouseKeysConfig,
 
   // The MagicCombo plugin lets you use key combinations to trigger custom
   // actions - a bit like Macros, but triggered by pressing multiple keys at the
@@ -548,36 +518,37 @@ KALEIDOSCOPE_INIT_PLUGINS(
 
   // Enables the GeminiPR Stenography protocol. Unused by default, but with the
   // plugin enabled, it becomes configurable - and then usable - via Chrysalis.
-  GeminiPR,
+  //  GeminiPR,
 
   // ----------------------------------------------------------------------
   // LED mode plugins
 
   // The boot greeting effect pulses the LED button for 10 seconds after the
   // keyboard is first connected
-  BootGreetingEffect,
+  //  BootGreetingEffect,
 
   // LEDControl provides support for other LED modes
   LEDControl,
-
+  LEDActiveLayerColorEffect,
+  ActiveModColorEffect,
   // We start with the LED effect that turns off all the LEDs.
-  //  LEDOff,
+  LEDOff,
 
   // These static effects turn your keyboard's LEDs a variety of colors
-  solidRed,
-  solidOrange,
-  solidYellow,
-  solidGreen,
-  solidBlue,
-  solidIndigo,
-  solidViolet,
+  //  solidRed,
+  //solidOrange,
+  //  solidYellow,
+  //  solidGreen,
+  //  solidBlue,
+  //  solidIndigo,
+  //  solidqViolet,
 
   // The LED Palette Theme plugin provides a shared palette for other plugins,
   // like Colormap below
-  LEDPaletteTheme,
+  //  LEDPaletteTheme,
 
   // The Colormap effect makes it possible to set up per-layer colormaps
-  ColormapEffect,
+  //  ColormapEffect,
 
   // The HostPowerManagement plugin allows us to turn LEDs off when then host
   // goes to sleep, and resume them when it wakes up.
@@ -605,15 +576,34 @@ KALEIDOSCOPE_INIT_PLUGINS(
  * It's called when your keyboard first powers up. This is where you set up
  * Kaleidoscope and any plugins.
  */
+
+
+static const cRGB layerColormap[] PROGMEM = {
+  CRGB(128, 0, 0),
+  CRGB(0, 128, 255),
+  CRGB(0, 128, 128),
+  CRGB(128, 0, 255),
+  CRGB(255, 128, 0),
+  CRGB(0, 255, 0),
+};
+
+
 void setup() {
   // First, call Kaleidoscope's internal setup function
   Kaleidoscope.setup();
+
   OneShot.setTimeout(500);
   OneShot.setDoubleTapTimeout(2500);
 
+  LEDActiveLayerColorEffect.setColormap(layerColormap);
+  ActiveModColorEffect.setHighlightColor(CRGB(128, 128, 128));
+  ActiveModColorEffect.setOneShotColor(CRGB(255, 255, 255));
+  ActiveModColorEffect.setStickyColor(CRGB(255, 150, 255));
+  ActiveModColorEffect.highlightNormalModifiers(true);
+
   // Set the hue of the boot greeting effect to something that will result in a
   // nice green color.
-  BootGreetingEffect.hue = 85;
+  //  BootGreetingEffect.hue = 85;
 
   // Set the action key the test mode should listen for to Left Fn
   HardwareTestMode.setActionKey(R3C6);
@@ -628,7 +618,7 @@ void setup() {
   // We need to tell the Colormap plugin how many layers we want to have custom
   // maps for. To make things simple, we set it to eight layers, which is how
   // many editable layers we have (see above).
-  ColormapEffect.max_layers(8);
+  //  ColormapEffect.max_layers(8);
 
   // For Dynamic Macros, we need to reserve storage space for the editable
   // macros. A kilobyte is a reasonable default.
@@ -644,7 +634,7 @@ void setup() {
   // To avoid any surprises, SpaceCadet is turned off by default. However, it
   // can be permanently enabled via Chrysalis, so we should only disable it if
   // no configuration exists.
-  SpaceCadetConfig.disableSpaceCadetIfUnconfigured();
+  //  SpaceCadetConfig.disableSpaceCadetIfUnconfigured();
 
   // Editable layer names are stored in EEPROM too, and we reserve 16 bytes per
   // layer for them. We need one extra byte per layer for bookkeeping, so we
