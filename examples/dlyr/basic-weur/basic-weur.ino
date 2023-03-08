@@ -277,34 +277,34 @@ LockLayer(DVORAK),  Key_Z, Key_X, Key_C, Key_D, Key_V, ___,
       ___),
  [WEUR]= KEYMAP_STACKED
       (
-   ___                  , ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
-   ___                  , ___                  , ___                  , Key_E_UML            , Key_E_GRAV           , ___                  , ___                  ,
-   ___                  , Key_A_UML            , Key_A_GRAV           , Key_E_ACUTE          , Key_E_CIRC           , Key_U_CIRC           ,
-   ___                  , Key_A_ACUTE          , Key_A_CIRC           , Key_C_CEDIL          , ___                  , ___                  , ___                  ,
-   ___                  , ___                  , ___                  , ___                  ,
-   ___                  ,
+   ___, ___                  , ___                  , ___                  , ___                  , ___                  , ___,
+   ___, ___                  , ___                  , Key_E_UML            , Key_E_GRAV           , ___                  , ___,
+   ___, Key_A_UML            , Key_A_GRAV           , Key_E_ACUTE          , Key_E_CIRC           , Key_U_CIRC           ,
+   ___, Key_A_ACUTE          , Key_A_CIRC           , Key_C_CEDIL          , ___                  , ___                  , ___,
+   ___, ___                  , ___                  , ___                  ,
+   ___,
 
-   ___                  , ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
-   ___                  , Key_U_GRAV           , Key_U_UML            , Key_I_UML            , Key_O_UML            , ___                  , ___                  ,
-                          ___                  , ___                  , ___                  , ___                  , Key_O_CIRC           , ___                  ,
-   ___                  , ___                  , ___                  , ___                  , Key_O_ELIG           , ___                  , ___                  ,
-   ___                  , ___                  , Key_Enter            , ___                  ,
+   ___, ___                  , ___                  , ___                  , ___                  , ___                  , ___,
+   ___, Key_U_GRAV           , Key_U_UML            , Key_I_UML            , Key_O_UML            , ___                  , ___,
+        ___                  , ___                  , ___                  , ___                  , Key_O_CIRC           , ___,
+   ___, ___                  , ___                  , ___                  , Key_O_ELIG           , ___                  , ___,
+   ___, ___                  , Key_Enter            , ___                  ,
    ___
           ),
 
 [SYMBOLS] =  KEYMAP_STACKED
 (
    ___, ___, ___, ___, ___, ___, ___,
-   ___, Key_ExclamationPoint, Key_LessThan, Key_Equals, Key_GreaterThan, Key_Minus, ___,
-   ___, Key_Backslash, Key_LeftParen, Key_Dollar, Key_RightParen, Key_Plus,
-   ___, Key_Asterisk, Key_At, Key_Colon, Key_Slash, Key_Pound, ___,
+   ___, Key_ExclamationPoint, Key_LessThan,  Key_Equals, Key_GreaterThan, Key_Minus, ___,
+   ___, Key_Backslash,        Key_LeftParen, Key_Dollar, Key_RightParen,  Key_Plus,
+   ___, Key_Asterisk,         Key_At,        Key_Colon,  Key_Slash,       Key_Pound, ___,
    ___, ___, ___, ___,
    ___,
 
    ___, ___, ___, ___, ___, ___, ___,
-   ___, Key_Carat, Key_LeftBracket, Key_Underscore, Key_RightBracket, Key_DoubleQuote, ___,
-        Key_Percent, Key_LeftCurlyBracket, Key_Semicolon, Key_RightCurlyBracket, Key_Quote, ___,
-   ___, Key_Backtick, Key_Pipe, Key_Tilde, Key_Ampersand, Key_QuestionMark, ___,
+   ___, Key_Carat,    Key_LeftBracket,      Key_Underscore, Key_RightBracket,      Key_DoubleQuote, ___,
+        Key_Percent,  Key_LeftCurlyBracket, Key_Semicolon,  Key_RightCurlyBracket, Key_Quote, ___,
+   ___, Key_Backtick, Key_Pipe,             Key_Tilde,      Key_Ampersand,         Key_QuestionMark, ___,
    ___, ___, ___, ___,
    ___
     ),
@@ -343,20 +343,6 @@ LockLayer(DVORAK),  Key_Z, Key_X, Key_C, Key_D, Key_V, ___,
 const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
   return MACRO_NONE;
 }
-
-
-// These 'solid' color effect definitions define a rainbow of
-// LED color modes calibrated to draw 500mA or less on the
-// Keyboardio Model 100.
-
-//static kaleidoscope::plugin::LEDSolidColor solidRed(160, 0, 0);
-//static kaleidoscope::plugin::LEDSolidColor solidOrange(140, 70, 0);
-//static kaleidoscope::plugin::LEDSolidColor solidYellow(130, 100, 0);
-//static kaleidoscope::plugin::LEDSolidColor solidGreen(0, 160, 0);
-//static kaleidoscope::plugin::LEDSolidColor solidBlue(0, 70, 130);
-//static kaleidoscope::plugin::LEDSolidColor solidIndigo(0, 0, 170);
-//static kaleidoscope::plugin::LEDSolidColor solidViolet(130, 0, 120);
-//
 
 /** toggleLedsOnSuspendResume toggles the LEDs off when the host goes to sleep,
  * and turns them back on when it wakes up.
