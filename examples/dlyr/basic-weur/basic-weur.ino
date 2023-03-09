@@ -169,10 +169,9 @@ class WeurPlugin : public Plugin {
  public:
   static constexpr uint32_t upperOffset = 0x00E0 - 0x00C0;
 
-  bool isShiftKeyHeld(Key &which) {
+  bool isShiftKeyHeld() {
     for (Key key : kaleidoscope::live_keys.all()) {
       if (key.isKeyboardShift()) {
-        which = key;
         return true;
       }
     }
@@ -180,25 +179,21 @@ class WeurPlugin : public Plugin {
   }
 
   EventHandlerResult onKeyEvent(KeyEvent &event) {
-
-    uint32_t converted = keyToUnicode(event.key);
-
-    if (converted == 0) return EventHandlerResult::OK;
-
     if (keyToggledOn(event.state)) {
-      Key shiftKey;
-      if (isShiftKeyHeld(shiftKey)) {
-        kaleidoscope::Runtime.hid().keyboard().releaseRawKey(shiftKey);
-        kaleidoscope::Runtime.hid().keyboard().sendReport();
-        ::Unicode.type(converted - upperOffset);
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(shiftKey);
-        kaleidoscope::Runtime.hid().keyboard().sendReport();
-      } else {
-        ::Unicode.type(converted);
+      uint32_t converted = keyToUnicode(event.key);
+
+      if (converted == 0) return EventHandlerResult::OK;
+
+      if (isShiftKeyHeld()) {
+        converted -= upperOffset;
       }
+
+      kaleidoscope::Runtime.hid().keyboard().clearModifiers();
+      kaleidoscope::Runtime.hid().keyboard().sendReport();
+      ::Unicode.type(converted);
     }
 
-    return EventHandlerResult::ABORT;
+    return EventHandlerResult::OK;
   }
 };
 }  // namespace plugin
