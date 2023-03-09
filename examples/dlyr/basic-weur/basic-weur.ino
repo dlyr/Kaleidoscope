@@ -265,7 +265,7 @@ LockLayer(PRIMARY), Key_Semicolon, Key_Q,     Key_J,      Key_K, Key_X, ___,
   (___,          ___,         ___, ___ , ___, ___,  ___,
    ___,              Key_Q, Key_W, Key_F, Key_P, Key_B, ___,
    ___,              Key_A, Key_R, Key_S, Key_T, Key_G,
-LockLayer(DVORAK),  Key_Z, Key_X, Key_C, Key_D, Key_V, ___,
+LockLayer(DVORAK),   Key_Z, Key_X, Key_C, Key_D, Key_V, ___,
    ___, ___, ___, ___,
    ___,
 
