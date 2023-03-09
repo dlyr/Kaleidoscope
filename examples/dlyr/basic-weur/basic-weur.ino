@@ -97,7 +97,8 @@ constexpr Key Key_O_ELIG{Key_C_CEDIL.getRaw() + 1};
 
 struct KeyToUnicode {
   Key key;
-  uint32_t unicode;
+  uint32_t lowercase;
+  uint32_t uppercase;
 };
 
 static const KeyToUnicode keyToUnicodeTable[] = {
@@ -124,43 +125,16 @@ static const KeyToUnicode keyToUnicodeTable[] = {
   {Key_C_CEDIL, U'ç'},
   {Key_O_ELIG, U'œ'},
 };
+
 const int8_t UNICODE_TABLE_SIZE = sizeof(keyToUnicodeTable) / sizeof(*keyToUnicodeTable);
 
 static constexpr uint32_t keyToUnicode(const Key &key) {
   for (int i = 0; i < UNICODE_TABLE_SIZE; ++i) {
     if (keyToUnicodeTable[i].key == key)
-      return keyToUnicodeTable[i].unicode;
+      return keyToUnicodeTable[i].lowercase;
   }
   return 0;
 }
-
-namespace kaleidoscope {
-namespace plugin {
-// When activated, this plugin will suppress any `shift` key (including modifier
-// combos with `shift` a flag) before it's added to the HID report.
-class ShiftBlocker : public Plugin {
-
- public:
-  EventHandlerResult onAddToReport(Key key) {
-    if (active_ && key.isKeyboardShift())
-      return EventHandlerResult::ABORT;
-    return EventHandlerResult::OK;
-  }
-
-  void enable() {
-    active_ = true;
-  }
-  void disable() {
-    active_ = false;
-  }
-
- private:
-  bool active_{false};
-};
-}  // namespace plugin
-}  // namespace kaleidoscope
-
-kaleidoscope::plugin::ShiftBlocker ShiftBlocker;
 
 namespace kaleidoscope {
 namespace plugin {
