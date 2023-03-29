@@ -42,35 +42,50 @@
 #include <Kaleidoscope-LED-ActiveLayerColor.h>
 #include <Kaleidoscope-LED-ActiveModColor.h>
 
-#define Key_ExclamationPoint LSHIFT(Key_1)
-#define Key_At LSHIFT(Key_2)
-#define Key_Pound LSHIFT(Key_3)
-#define Key_Dollar LSHIFT(Key_4)
-#define Key_Percent LSHIFT(Key_5)
-#define Key_Carat LSHIFT(Key_6)
 #define Key_Ampersand LSHIFT(Key_7)
 #define Key_Asterisk LSHIFT(Key_8)
-#define Key_LeftParen LSHIFT(Key_9)
-#define Key_RithtParen LSHIFT(Key_0)
-#define Key_Underscore LSHIFT(Key_Minus)
-#define Key_Plus LSHIFT(Key_Equals)
-#define Key_Tilde LSHIFT(Key_NonUsPound)
-#define Key_Colon LSHIFT(Key_Semicolon)
-#define Key_DoubleQuote LSHIFT(Key_Quote)
-#define Key_Tilde LSHIFT(Key_Backtick)
-#define Key_LessThan LSHIFT(Key_Comma)
-#define Key_GreaterThan LSHIFT(Key_Period)
-#define Key_QuestionMark LSHIFT(Key_Slash)
+#define Key_At LSHIFT(Key_2)
+#define Key_Carat LSHIFT(Key_6)
 #define Key_Clear LSHIFT(Key_KeypadNumLock)
+#define Key_Colon LSHIFT(Key_Semicolon)
+#define Key_Dollar LSHIFT(Key_4)
+#define Key_DoubleQuote LSHIFT(Key_Quote)
+#define Key_ExclamationPoint LSHIFT(Key_1)
+#define Key_GreaterThan LSHIFT(Key_Period)
+#define Key_LeftParen LSHIFT(Key_9)
+#define Key_LessThan LSHIFT(Key_Comma)
+#define Key_Percent LSHIFT(Key_5)
+#define Key_Plus LSHIFT(Key_Equals)
+#define Key_Pound LSHIFT(Key_3)
+#define Key_QuestionMark LSHIFT(Key_Slash)
+#define Key_RithtParen LSHIFT(Key_0)
+#define Key_Tilde LSHIFT(Key_Backtick)
+#define Key_Tilde LSHIFT(Key_NonUsPound)
+#define Key_Underscore LSHIFT(Key_Minus)
+
+#define Key_Compose Key_CapsLock
 
 enum {
   PRIMARY,
-  DVORAK,
+  // DVORAK,
   COLEMAK,
   WEUR,
   SYMBOLS,
-  NUMNAV
+  NUMNAV,
+  SPACE_QUKEYS
 };  // layers
+
+// layers colors, same ordering
+static const cRGB layerColormap[] PROGMEM = {
+  CRGB(128, 0, 0),
+  // CRGB(0, 128, 255),
+  CRGB(0, 128, 128),
+  CRGB(128, 0, 255),
+  CRGB(255, 128, 0),
+  CRGB(0, 255, 0),
+  CRGB(10, 138, 138),  // slightly lighter than colemak
+};
+
 
 constexpr Key Key_A_CIRC{kaleidoscope::ranges::SAFE_START};
 constexpr Key Key_A_ACUTE{Key_A_CIRC.getRaw() + 1};
@@ -95,6 +110,13 @@ constexpr Key Key_U_UML{Key_U_GRAV.getRaw() + 1};
 constexpr Key Key_C_CEDIL{Key_U_UML.getRaw() + 1};
 constexpr Key Key_O_ELIG{Key_C_CEDIL.getRaw() + 1};
 
+enum { MA_ACUTE,
+       MA_GRAV,
+       MA_CIRC,
+       MA_UML,
+       MA_CEDIL };
+
+
 struct KeyToUnicode {
   Key key;
   uint32_t lowercase;
@@ -102,36 +124,36 @@ struct KeyToUnicode {
 };
 
 static const KeyToUnicode keyToUnicodeTable[] = {
-  {Key_A_CIRC, U'â'},
-  {Key_A_ACUTE, U'á'},
-  {Key_A_GRAV, U'à'},
-  {Key_A_UML, U'ä'},
-  {Key_E_CIRC, U'ê'},
-  {Key_E_ACUTE, U'é'},
-  {Key_E_GRAV, U'è'},
-  {Key_E_UML, U'ë'},
-  {Key_I_CIRC, U'î'},
-  {Key_I_ACUTE, U'í'},
-  {Key_I_GRAV, U'ì'},
-  {Key_I_UML, U'ï'},
-  {Key_O_CIRC, U'ô'},
-  {Key_O_ACUTE, U'ó'},
-  {Key_O_GRAV, U'ò'},
-  {Key_O_UML, U'ö'},
-  {Key_U_CIRC, U'û'},
-  {Key_U_ACUTE, U'ú'},
-  {Key_U_GRAV, U'ù'},
-  {Key_U_UML, U'ü'},
-  {Key_C_CEDIL, U'ç'},
-  {Key_O_ELIG, U'œ'},
+  {Key_A_CIRC, U'â', U'Â'},
+  {Key_A_ACUTE, U'á', U'Á'},
+  {Key_A_GRAV, U'à', U'À'},
+  {Key_A_UML, U'ä', U'Ä'},
+  {Key_E_CIRC, U'ê', U'Ê'},
+  {Key_E_ACUTE, U'é', U'É'},
+  {Key_E_GRAV, U'è', U'È'},
+  {Key_E_UML, U'ë', U'Ë'},
+  {Key_I_CIRC, U'î', U'Î'},
+  {Key_I_ACUTE, U'í', U'Í'},
+  {Key_I_GRAV, U'ì', U'Ì'},
+  {Key_I_UML, U'ï', U'Ï'},
+  {Key_O_CIRC, U'ô', U'Ô'},
+  {Key_O_ACUTE, U'ó', U'Ó'},
+  {Key_O_GRAV, U'ò', U'Ò'},
+  {Key_O_UML, U'ö', U'Ö'},
+  {Key_U_CIRC, U'û', U'Û'},
+  {Key_U_ACUTE, U'ú', U'Ú'},
+  {Key_U_GRAV, U'ù', U'Ù'},
+  {Key_U_UML, U'ü', U'Ü'},
+  {Key_C_CEDIL, U'ç', U'Ç'},
+  {Key_O_ELIG, U'œ', U'Œ'},
 };
 
 const int8_t UNICODE_TABLE_SIZE = sizeof(keyToUnicodeTable) / sizeof(*keyToUnicodeTable);
 
-static constexpr uint32_t keyToUnicode(const Key &key) {
+static constexpr uint32_t keyToUnicode(const Key &key, bool shifted) {
   for (int i = 0; i < UNICODE_TABLE_SIZE; ++i) {
     if (keyToUnicodeTable[i].key == key)
-      return keyToUnicodeTable[i].lowercase;
+      return shifted ? keyToUnicodeTable[i].uppercase : keyToUnicodeTable[i].lowercase;
   }
   return 0;
 }
@@ -154,13 +176,9 @@ class WeurPlugin : public Plugin {
 
   EventHandlerResult onKeyEvent(KeyEvent &event) {
     if (keyToggledOn(event.state)) {
-      uint32_t converted = keyToUnicode(event.key);
+      uint32_t converted = keyToUnicode(event.key, isShiftKeyHeld());
 
       if (converted == 0) return EventHandlerResult::OK;
-
-      if (isShiftKeyHeld()) {
-        converted -= upperOffset;
-      }
 
       kaleidoscope::Runtime.hid().keyboard().clearModifiers();
       kaleidoscope::Runtime.hid().keyboard().sendReport();
@@ -175,25 +193,6 @@ class WeurPlugin : public Plugin {
 
 kaleidoscope::plugin::WeurPlugin WeurPlugin;
 
-/**
-  * To change your keyboard's layout from QWERTY to DVORAK or COLEMAK, comment out the line
-  *
-  * #define PRIMARY_KEYMAP_QWERTY
-  *
-  * by changing it to
-  *
-  * // #define PRIMARY_KEYMAP_QWERTY
-  *
-  * Then uncomment the line corresponding to the layout you want to use.
-  *
-  */
-
-#define PRIMARY_KEYMAP_QWERTY
-// #define PRIMARY_KEYMAP_DVORAK
-// #define PRIMARY_KEYMAP_COLEMAK
-// #define PRIMARY_KEYMAP_CUSTOM
-
-
 /* This comment temporarily turns off astyle's indent enforcement
  *   so we can make the keymaps actually resemble the physical key layout better
  */
@@ -201,8 +200,9 @@ kaleidoscope::plugin::WeurPlugin WeurPlugin;
 
 KEYMAPS(
 
-  [PRIMARY] = KEYMAP_STACKED
-  (___,                 Key_1, Key_2, Key_3, Key_4, Key_5, Key_OneShotCancel,
+[PRIMARY] = KEYMAP_STACKED
+(
+   ___,                 Key_1, Key_2, Key_3, Key_4, Key_5, Key_OneShotCancel,
    Key_Backtick,        Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
    Key_Tab,             Key_A, Key_S, Key_D, Key_F, Key_G,
 LockLayer(COLEMAK),     Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
@@ -212,10 +212,10 @@ LockLayer(COLEMAK),     Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
    Key_RightAlt,  Key_6, Key_7, Key_8,     Key_9,         Key_0,         Key_LEDEffectNext,
    Key_Enter,     Key_Y, Key_U, Key_I,     Key_O,         Key_P,         Key_Equals,
                   Key_H, Key_J, Key_K,     Key_L,         Key_Semicolon, Key_Quote,
-   Key_CapsLock,  Key_N, Key_M, Key_Comma, Key_Period,    Key_Slash,     Key_Minus,
-   Key_LeftGui,   OSM(LeftAlt), Key_Spacebar, OSM(RightShift),
+   Key_Compose,   Key_N, Key_M, Key_Comma, Key_Period,    Key_Slash,     Key_Minus,
+   Key_LeftGui,   OSM(LeftAlt), LT(SPACE_QUKEYS, Spacebar), OSM(RightShift),
    ShiftToLayer(WEUR)),
-
+/*
   [DVORAK] = KEYMAP_STACKED
   (___,          ___,         ___, ___ , ___, ___,  ___,
    ___,             Key_Quote,     Key_Comma, Key_Period, Key_P, Key_Y, ___,
@@ -230,22 +230,27 @@ LockLayer(PRIMARY), Key_Semicolon, Key_Q,     Key_J,      Key_K, Key_X, ___,
    ___,      Key_B, Key_M, Key_W, Key_V, Key_Z, Key_Equals,
    ___, ___, ___, ___,
       ___),
- [COLEMAK] = KEYMAP_STACKED
-  (___,          ___,         ___, ___ , ___, ___,  ___,
-   ___,              Key_Q, Key_W, Key_F, Key_P, Key_B, ___,
-   ___,              Key_A, Key_R, Key_S, Key_T, Key_G,
-LockLayer(DVORAK),   Key_Z, Key_X, Key_C, Key_D, Key_V, ___,
+*/
+
+[COLEMAK] = KEYMAP_STACKED
+(
+   ___,             ___  , ___  , ___  , ___  , ___  , ___,
+   ___,             Key_Q, Key_W, Key_F, Key_P, Key_B, ___,
+   ___,             Key_A, Key_R, Key_S, Key_T, Key_G,
+LockLayer(PRIMARY), Key_Z, Key_X, Key_C, Key_D, Key_V, ___,
    ___, ___, ___, ___,
    ___,
 
-   ___,          ___,         ___, ___ , ___, ___,  ___,
-   ___,      Key_J, Key_L, Key_U,     Key_Y,         Key_Semicolon, Key_Equals,
-             Key_M, Key_N, Key_E,     Key_I,         Key_O,         Key_Quote,
-   ___,      Key_K, Key_H, Key_Comma, Key_Period,    Key_Slash,     Key_Minus,
+   ___, ___  , ___  , ___      , ___       , ___          , ___       ,
+   ___, Key_J, Key_L, Key_U    , Key_Y     , Key_Semicolon, Key_Equals,
+        Key_M, Key_N, Key_E    , Key_I     , Key_O        , Key_Quote ,
+   ___, Key_K, Key_H, Key_Comma, Key_Period, Key_Slash    , Key_Minus ,
    ___, ___, ___, ___,
-      ___),
- [WEUR]= KEYMAP_STACKED
-      (
+   ___
+),
+
+[WEUR]= KEYMAP_STACKED
+(
    ___, ___                  , ___                  , ___                  , ___                  , ___                  , ___,
    ___, ___                  , ___                  , Key_E_UML            , Key_E_GRAV           , ___                  , ___,
    ___, Key_A_UML            , Key_A_GRAV           , Key_E_ACUTE          , Key_E_CIRC           , Key_U_CIRC           ,
@@ -259,7 +264,7 @@ LockLayer(DVORAK),   Key_Z, Key_X, Key_C, Key_D, Key_V, ___,
    ___, ___                  , ___                  , ___                  , Key_O_ELIG           , ___                  , ___,
    ___, ___                  , Key_Enter            , ___                  ,
    ___
-          ),
+),
 
 [SYMBOLS] =  KEYMAP_STACKED
 (
@@ -277,8 +282,10 @@ LockLayer(DVORAK),   Key_Z, Key_X, Key_C, Key_D, Key_V, ___,
    ___, ___, ___, ___,
    ___
     ),
- [NUMNAV] = KEYMAP_STACKED
-  (___,            Key_F1,  Key_F2,      Key_F3,      Key_F4,        Key_F5,           Key_CapsLock,
+
+[NUMNAV] = KEYMAP_STACKED
+(
+  ___,            Key_F1,  Key_F2,      Key_F3,      Key_F4,        Key_F5,           Key_Compose,
   Key_Tab,         Key_1,   Key_2,       Key_3,       Key_4,         Key_5,             ___,
   ___,             ___,     Key_Home,    Key_PageUp,  Key_End,       ___,
   Key_PrintScreen, ___,     Key_Insert,  Key_PageDown, ___,          ___,               ___,
@@ -290,7 +297,27 @@ LockLayer(DVORAK),   Key_Z, Key_X, Key_C, Key_D, Key_V, ___,
                                ___,          Key_LeftArrow,            Key_UpArrow,   Key_RightArrow,           Key_Period,              Key_Comma,
   Key_Menu,                   Consumer_Mute, Consumer_VolumeDecrement, Key_DownArrow, Consumer_VolumeIncrement, Consumer_PlaySlashPause, Consumer_Stop,
   ___, ___, Key_Space, ___,
-  ___),
+  ___
+),
+
+[SPACE_QUKEYS] =  KEYMAP_STACKED
+(
+   ___        , ___        , ___        , ___        , ___        , ___        , ___        ,
+   ___        , ___        , ___        , ___        , ___        , ___        , ___        ,
+   ___        , M(MA_GRAV) , M(MA_ACUTE), M(MA_CIRC) , M(MA_UML)  , ___        ,
+   ___        , ___        , ___        , M(MA_CEDIL), ___        , ___        , ___        ,
+   Key_Compose, Key_Enter  , ___        , ___        ,
+   ___        ,
+
+   ___        , ___        , ___        , ___        , ___        , ___        , ___        ,
+   ___        , ___        , ___        , ___        , ___        , ___        , ___        ,
+                ___        , ___        , ___        , ___        , ___        , ___        ,
+   ___        , ___        , ___        , ___        , ___        , ___        , ___        ,
+   ___        , ___        , ___        , ___        ,
+   ___
+),
+
+
 
 ) // KEYMAPS(
 
@@ -310,6 +337,39 @@ LockLayer(DVORAK),   Key_Z, Key_X, Key_C, Key_D, Key_V, ___,
  */
 
 const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
+  switch (macro_id) {
+  case MA_ACUTE:
+    if (keyToggledOn(event.state)) {
+      return MACRO(T(CapsLock),
+                   T(Quote));
+    }
+    break;
+  case MA_GRAV:
+    if (keyToggledOn(event.state)) {
+      return MACRO(T(CapsLock),
+                   T(Backtick));
+    }
+    break;
+  case MA_CIRC:
+    if (keyToggledOn(event.state)) {
+      return MACRO(T(CapsLock),
+                   T(Carat));
+    }
+    break;
+  case MA_UML:
+    if (keyToggledOn(event.state)) {
+      return MACRO(T(CapsLock),
+                   T(DoubleQuote));
+    }
+    break;
+  case MA_CEDIL:
+    if (keyToggledOn(event.state)) {
+      return MACRO(T(CapsLock),
+                   T(Comma));
+    }
+    break;
+  }
+
   return MACRO_NONE;
 }
 
@@ -432,7 +492,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
   DefaultLEDModeConfig,
 
   // Enables controlling (and saving) the brightness of the LEDs via Focus.
-  LEDBrightnessConfig,
+  // LEDBrightnessConfig,
 
   // ----------------------------------------------------------------------
   // Keystroke-handling plugins
@@ -486,21 +546,11 @@ KALEIDOSCOPE_INIT_PLUGINS(
   LEDControl,
   LEDActiveLayerColorEffect,
   ActiveModColorEffect,
-  // We start with the LED effect that turns off all the LEDs.
   LEDOff,
-
-  // These static effects turn your keyboard's LEDs a variety of colors
-  //  solidRed,
-  //solidOrange,
-  //  solidYellow,
-  //  solidGreen,
-  //  solidBlue,
-  //  solidIndigo,
-  //  solidqViolet,
 
   // The LED Palette Theme plugin provides a shared palette for other plugins,
   // like Colormap below
-  //  LEDPaletteTheme,
+  // LEDPaletteTheme,
 
   // The Colormap effect makes it possible to set up per-layer colormaps
   //  ColormapEffect,
@@ -533,17 +583,14 @@ KALEIDOSCOPE_INIT_PLUGINS(
  */
 
 
-static const cRGB layerColormap[] PROGMEM = {
-  CRGB(128, 0, 0),
-  CRGB(0, 128, 255),
-  CRGB(0, 128, 128),
-  CRGB(128, 0, 255),
-  CRGB(255, 128, 0),
-  CRGB(0, 255, 0),
-};
-
-
 void setup() {
+
+  //  Qukeys.setHoldTimeout(250);
+  //  Qukeys.setOverlapThreshold(50);
+  //  Qukeys.setMinimumHoldTime(100);
+  //  Qukeys.setMinimumPriorInterval(80);
+  //  Qukeys.setMaxIntervalForTapRepeat(150);
+  //
   // First, call Kaleidoscope's internal setup function
   Kaleidoscope.setup();
 
