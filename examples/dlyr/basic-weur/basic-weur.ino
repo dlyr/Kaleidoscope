@@ -586,9 +586,9 @@ KALEIDOSCOPE_INIT_PLUGINS(
 void setup() {
 
   //  Qukeys.setHoldTimeout(250);
-  //  Qukeys.setOverlapThreshold(50);
+  Qukeys.setOverlapThreshold(30);
   //  Qukeys.setMinimumHoldTime(100);
-  //  Qukeys.setMinimumPriorInterval(80);
+  Qukeys.setMinimumPriorInterval(10);
   //  Qukeys.setMaxIntervalForTapRepeat(150);
   //
   // First, call Kaleidoscope's internal setup function
