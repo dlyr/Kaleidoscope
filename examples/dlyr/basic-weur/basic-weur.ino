@@ -60,7 +60,7 @@
 #define Key_QuestionMark LSHIFT(Key_Slash)
 #define Key_RithtParen LSHIFT(Key_0)
 #define Key_Tilde LSHIFT(Key_Backtick)
-#define Key_Tilde LSHIFT(Key_NonUsPound)
+//#define Key_Tilde LSHIFT(Key_NonUsPound)
 #define Key_Underscore LSHIFT(Key_Minus)
 
 #define Key_Compose Key_CapsLock
