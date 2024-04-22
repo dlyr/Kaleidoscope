@@ -212,7 +212,7 @@ LockLayer(COLEMAK),     Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
    Key_RightAlt,  Key_6, Key_7, Key_8,     Key_9,         Key_0,         Key_LEDEffectNext,
    Key_Enter,     Key_Y, Key_U, Key_I,     Key_O,         Key_P,         Key_Equals,
                   Key_H, Key_J, Key_K,     Key_L,         Key_Semicolon, Key_Quote,
-   Key_Compose,   Key_N, Key_M, Key_Comma, Key_Period,    Key_Slash,     Key_Minus,
+   Key_Compose,   Key_N, Key_M, Key_Comma, Key_Period,   Key_Slash,     Key_Minus,
    Key_LeftGui,   OSM(LeftAlt), LT(SPACE_QUKEYS, Spacebar), OSM(RightShift),
    ShiftToLayer(WEUR)),
 /*
@@ -439,10 +439,30 @@ static void enterHardwareTestMode(uint8_t combo_index) {
   HardwareTestMode.runTests();
 }
 
-
 /** Magic combo list, a list of key combo and action pairs the firmware should
  * recognise.
  */
+enum { PROTOCOLE,
+       TEST_MODE,
+       KEYMAP_SOURCE,
+       //       A_CIRC,
+       E_ACUTE
+};
+
+
+void typeSpecialChar(uint8_t combo_index) {
+  switch (combo_index) {
+  case E_ACUTE:
+    Macros.tap(Key_CapsLock);
+    Macros.tap(Key_Quote);
+    Macros.tap(Key_E);
+    break;
+  default:
+    Macros.type(PSTR("It's a kind of magic!"));
+    break;
+  }
+}
+
 USE_MAGIC_COMBOS({.action = toggleKeyboardProtocol,
                   // Left Fn + Esc + Shift
                   .keys = {R3C6, R2C6, R3C7}},
@@ -451,7 +471,12 @@ USE_MAGIC_COMBOS({.action = toggleKeyboardProtocol,
                   .keys = {R3C6, R0C0, R0C6}},
                  {.action = toggleKeymapSource,
                   // Left Fn + Prog + Shift
-                  .keys = {R3C6, R0C0, R3C7}});
+                  .keys = {R3C6, R0C0, R3C7}},
+                 //N + E
+                 //   {.action = typeSpecialChar,
+                 //                  .keys = {R2C11, R2C12}}
+);
+
 
 // First, tell Kaleidoscope which plugins you want to use.
 // The order can be important. For example, LED effects are
@@ -585,7 +610,10 @@ KALEIDOSCOPE_INIT_PLUGINS(
 
 void setup() {
 
-  //  Qukeys.setHoldTimeout(250);
+  //  for magic combo accent
+  //    QUKEYS(
+  //  kaleidoscope::plugin::Qukey(1, KeyAddr(2, 11), Key_NoKey), kaleidoscope::plugin::Qukey(1, KeyAddr(2, 12), Key_NoKey))
+  Qukeys.setHoldTimeout(250);
   Qukeys.setOverlapThreshold(30);
   //  Qukeys.setMinimumHoldTime(100);
   Qukeys.setMinimumPriorInterval(10);
