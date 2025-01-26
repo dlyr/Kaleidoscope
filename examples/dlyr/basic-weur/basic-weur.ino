@@ -67,7 +67,6 @@
 
 enum {
   PRIMARY,
-  // DVORAK,
   COLEMAK,
   WEUR,
   SYMBOLS,
@@ -78,7 +77,6 @@ enum {
 // layers colors, same ordering
 static const cRGB layerColormap[] PROGMEM = {
   CRGB(128, 0, 0),
-  // CRGB(0, 128, 255),
   CRGB(0, 128, 128),
   CRGB(128, 0, 255),
   CRGB(255, 128, 0),
@@ -200,6 +198,7 @@ kaleidoscope::plugin::WeurPlugin WeurPlugin;
 
 KEYMAPS(
 
+
 [PRIMARY] = KEYMAP_STACKED
 (
    ___,                 Key_1, Key_2, Key_3, Key_4, Key_5, Key_OneShotCancel,
@@ -215,22 +214,6 @@ LockLayer(COLEMAK),     Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
    Key_Compose,   Key_N, Key_M, Key_Comma, Key_Period,   Key_Slash,     Key_Minus,
    Key_LeftGui,   OSM(LeftAlt), LT(SPACE_QUKEYS, Spacebar), OSM(RightShift),
    ShiftToLayer(WEUR)),
-/*
-  [DVORAK] = KEYMAP_STACKED
-  (___,          ___,         ___, ___ , ___, ___,  ___,
-   ___,             Key_Quote,     Key_Comma, Key_Period, Key_P, Key_Y, ___,
-   ___,             Key_A,         Key_O,     Key_E,      Key_U, Key_I,
-LockLayer(PRIMARY), Key_Semicolon, Key_Q,     Key_J,      Key_K, Key_X, ___,
-   ___, ___, ___, ___,
-   ___,
-
-   ___,          ___,         ___, ___ , ___, ___,  ___,
-   ___,      Key_F, Key_G, Key_C, Key_R, Key_L, Key_Slash,
-             Key_D, Key_H, Key_T, Key_N, Key_S, Key_Minus,
-   ___,      Key_B, Key_M, Key_W, Key_V, Key_Z, Key_Equals,
-   ___, ___, ___, ___,
-      ___),
-*/
 
 [COLEMAK] = KEYMAP_STACKED
 (
@@ -612,7 +595,16 @@ void setup() {
 
   //  for magic combo accent
   //    QUKEYS(
-  //  kaleidoscope::plugin::Qukey(1, KeyAddr(2, 11), Key_NoKey), kaleidoscope::plugin::Qukey(1, KeyAddr(2, 12), Key_NoKey))
+  //  kaleidoscope::plugin::Qukey(1, KeyAddr(2, 11), Key_NoKey), kaleidoscope::plugin::Qukey(1,
+  //    KeyAddr(2, 12), Key_NoKey))
+
+//  QUKEYS(
+    // left-side modifiers
+          //  kaleidoscope::plugin::Qukey(COLEMAK, KeyAddr(2, 1), Key_LeftGui),      // A
+//    kaleidoscope::plugin::Qukey(COLEMAK, KeyAddr(2, 2), Key_LeftAlt),      // R
+//    kaleidoscope::plugin::Qukey(COLEMAK, KeyAddr(2, 3), Key_LeftControl),  // S
+//    kaleidoscope::plugin::Qukey(COLEMAK, KeyAddr(2, 4), Key_LeftShift),    // T
+//  )
   Qukeys.setHoldTimeout(250);
   Qukeys.setOverlapThreshold(30);
   //  Qukeys.setMinimumHoldTime(100);
