@@ -112,7 +112,31 @@ enum { MA_ACUTE,
        MA_GRAV,
        MA_CIRC,
        MA_UML,
-       MA_CEDIL };
+       MA_CEDIL,
+       MA_A_CIRC,
+       MA_A_ACUTE,
+       MA_A_GRAV,
+       MA_A_UML,
+       MA_E_CIRC,
+       MA_E_ACUTE,
+       MA_E_GRAV,
+       MA_E_UML,
+       MA_I_CIRC,
+       MA_I_ACUTE,
+       MA_I_GRAV,
+       MA_I_UML,
+       MA_O_CIRC,
+       MA_O_ACUTE,
+       MA_O_GRAV,
+       MA_O_UML,
+       MA_U_CIRC,
+       MA_U_ACUTE,
+       MA_U_GRAV,
+       MA_U_UML,
+       MA_C_CEDIL,
+       MA_A_ELIG,
+       MA_O_ELIG
+};
 
 
 struct KeyToUnicode {
@@ -319,40 +343,105 @@ LockLayer(PRIMARY), Key_Z   , Key_X   , Key_C   , Key_D   , Key_V, ___,
 
  */
 
-const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
-  switch (macro_id) {
-  case MA_ACUTE:
-    if (keyToggledOn(event.state)) {
-      return MACRO(T(CapsLock),
-                   T(Quote));
-    }
-    break;
-  case MA_GRAV:
-    if (keyToggledOn(event.state)) {
-      return MACRO(T(CapsLock),
-                   T(Backtick));
-    }
-    break;
-  case MA_CIRC:
-    if (keyToggledOn(event.state)) {
-      return MACRO(T(CapsLock),
-                   T(Carat));
-    }
-    break;
-  case MA_UML:
-    if (keyToggledOn(event.state)) {
-      return MACRO(T(CapsLock),
-                   T(DoubleQuote));
-    }
-    break;
-  case MA_CEDIL:
-    if (keyToggledOn(event.state)) {
-      return MACRO(T(CapsLock),
-                   T(Comma));
-    }
-    break;
-  }
+#define D_ACUTE T(CapsLock), T(Quote)
+#define D_GRAV T(CapsLock), T(Backtick)
+#define D_CIRC T(CapsLock), T(Carat)
+#define D_UML T(CapsLock), T(DoubleQuote)
 
+const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
+  if (keyToggledOn(event.state)) {
+    switch (macro_id) {
+      // generics
+    case MA_ACUTE:
+      return MACRO(D_ACUTE);
+      break;
+    case MA_GRAV:
+      return MACRO(D_GRAV);
+      break;
+    case MA_CIRC:
+      return MACRO(D_CIRC);
+      break;
+    case MA_UML:
+      return MACRO(D_UML);
+      break;
+    case MA_CEDIL:
+      return MACRO(T(CapsLock), T(Comma));
+      //A
+    case MA_A_CIRC:
+      return MACRO(D_CIRC, T(A));
+      break;
+    case MA_A_ACUTE:
+      return MACRO(D_ACUTE, T(A));
+      break;
+    case MA_A_GRAV:
+      return MACRO(D_GRAV, T(A));
+      break;
+    case MA_A_UML:
+      return MACRO(D_UML, T(A));
+      break;
+      //E
+    case MA_E_CIRC:
+      return MACRO(D_CIRC, T(E));
+      break;
+    case MA_E_ACUTE:
+      return MACRO(D_ACUTE, T(E));
+      break;
+    case MA_E_GRAV:
+      return MACRO(D_GRAV, T(E));
+      break;
+    case MA_E_UML:
+      return MACRO(D_UML, T(E));
+      break;
+      //I
+    case MA_I_CIRC:
+      return MACRO(D_CIRC, T(I));
+      break;
+    case MA_I_ACUTE:
+      return MACRO(D_ACUTE, T(I));
+      break;
+    case MA_I_GRAV:
+      return MACRO(D_GRAV, T(I));
+      break;
+    case MA_I_UML:
+      return MACRO(D_UML, T(I));
+      break;
+      //O
+    case MA_O_CIRC:
+      return MACRO(D_CIRC, T(O));
+      break;
+    case MA_O_ACUTE:
+      return MACRO(D_ACUTE, T(O));
+      break;
+    case MA_O_GRAV:
+      return MACRO(D_GRAV, T(O));
+      break;
+    case MA_O_UML:
+      return MACRO(D_UML, T(O));
+      break;
+      //U
+    case MA_U_CIRC:
+      return MACRO(D_CIRC, T(U));
+      break;
+    case MA_U_ACUTE:
+      return MACRO(D_ACUTE, T(U));
+      break;
+    case MA_U_GRAV:
+      return MACRO(D_GRAV, T(U));
+      break;
+    case MA_U_UML:
+      return MACRO(D_UML, T(U));
+      break;
+    case MA_C_CEDIL:
+      return MACRO(T(CapsLock), T(Comma), T(C));
+      break;
+    case MA_A_ELIG:
+      return MACRO(T(CapsLock), T(A), T(E));
+      break;
+    case MA_O_ELIG:
+      return MACRO(T(CapsLock), T(O), T(E));
+      break;
+    }
+  }
   return MACRO_NONE;
 }
 
