@@ -134,6 +134,7 @@ enum { MA_ACUTE,
        MA_U_GRAV,
        MA_U_UML,
        MA_C_CEDIL,
+       MA_Y_UML,
        MA_A_ELIG,
        MA_O_ELIG
 };
@@ -259,20 +260,20 @@ LockLayer(PRIMARY), Key_Z   , Key_X   , Key_C   , Key_D   , Key_V, ___,
 
 [WEUR]= KEYMAP_STACKED
 (
-   ___                  , ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
-   ___, ___                  , ___                  , Key_E_UML            , Key_E_GRAV           , ___                  , ___,
-   ___, Key_A_UML            , Key_A_GRAV           , Key_E_ACUTE          , Key_E_CIRC           , Key_U_CIRC           ,
-   ___, Key_A_ACUTE          , Key_A_CIRC           , Key_C_CEDIL          , ___                  , ___                  , ___,
-   ___                  , ___                  , ___                  , ___                  ,
-   ___                  ,
+   ___, ___           , ___          , ___           , ___ , ___ , ___,
+   ___, ___           , ___          , ___           , ___ , ___ , ___,
+   ___, M(MA_A_ACUTE) , M(MA_A_CIRC) , M(MA_A_UML)   , ___ , ___ ,
+   ___, M(MA_A_ELIG)  , M(MA_O_ELIG) , M(MA_C_CEDIL) , ___ , ___ , ___,
+   ___, ___           , ___          , ___           ,
+   ___,
 
-   ___                  , ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
-   ___, Key_U_GRAV           , Key_U_UML            , Key_I_UML            , Key_O_UML            , ___                  , ___,
-        ___                  , ___                  , ___                  , ___                  , Key_O_CIRC           , ___,
-   ___, ___                  , ___                  , ___                  , Key_O_ELIG           , ___                  , ___,
-   ___, ___                  , Key_Enter            , ___                  ,
+   ___, ___          , ___          , ___          , ___          , ___         , ___,
+   ___, M(MA_U_CIRC) , M(MA_U_UML)  , M(MA_U_GRAV) , M(MA_Y_UML)  , ___         , ___,
+        M(MA_E_ACUTE), M(MA_E_GRAV) , M(MA_E_CIRC) , M(MA_E_UML)  , ___         , ___,
+   ___, ___          , M(MA_I_CIRC) , M(MA_I_UML)  , M(MA_O_CIRC) , M(MA_O_UML) , ___,
+   ___, ___          , Key_Enter    , ___          ,
    ___
-    ),
+),
 
 [SYMBOLS] =  KEYMAP_STACKED
 (
@@ -431,8 +432,12 @@ const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
     case MA_U_UML:
       return MACRO(D_UML, T(U));
       break;
+      //others
     case MA_C_CEDIL:
       return MACRO(T(CapsLock), T(Comma), T(C));
+      break;
+    case MA_Y_UML:
+      return MACRO(D_UML, T(Y));
       break;
     case MA_A_ELIG:
       return MACRO(T(CapsLock), T(A), T(E));
