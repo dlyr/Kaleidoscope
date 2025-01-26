@@ -84,30 +84,6 @@ static const cRGB layerColormap[] PROGMEM = {
   CRGB(10, 138, 138),  // slightly lighter than colemak
 };
 
-
-constexpr Key Key_A_CIRC{kaleidoscope::ranges::SAFE_START};
-constexpr Key Key_A_ACUTE{Key_A_CIRC.getRaw() + 1};
-constexpr Key Key_A_GRAV{Key_A_ACUTE.getRaw() + 1};
-constexpr Key Key_A_UML{Key_A_GRAV.getRaw() + 1};
-constexpr Key Key_E_CIRC{Key_A_UML.getRaw() + 1};
-constexpr Key Key_E_ACUTE{Key_E_CIRC.getRaw() + 1};
-constexpr Key Key_E_GRAV{Key_E_ACUTE.getRaw() + 1};
-constexpr Key Key_E_UML{Key_E_GRAV.getRaw() + 1};
-constexpr Key Key_I_CIRC{Key_E_UML.getRaw() + 1};
-constexpr Key Key_I_ACUTE{Key_I_CIRC.getRaw() + 1};
-constexpr Key Key_I_GRAV{Key_I_ACUTE.getRaw() + 1};
-constexpr Key Key_I_UML{Key_I_GRAV.getRaw() + 1};
-constexpr Key Key_O_CIRC{Key_I_UML.getRaw() + 1};
-constexpr Key Key_O_ACUTE{Key_O_CIRC.getRaw() + 1};
-constexpr Key Key_O_GRAV{Key_O_ACUTE.getRaw() + 1};
-constexpr Key Key_O_UML{Key_O_GRAV.getRaw() + 1};
-constexpr Key Key_U_CIRC{Key_O_UML.getRaw() + 1};
-constexpr Key Key_U_ACUTE{Key_U_CIRC.getRaw() + 1};
-constexpr Key Key_U_GRAV{Key_U_ACUTE.getRaw() + 1};
-constexpr Key Key_U_UML{Key_U_GRAV.getRaw() + 1};
-constexpr Key Key_C_CEDIL{Key_U_UML.getRaw() + 1};
-constexpr Key Key_O_ELIG{Key_C_CEDIL.getRaw() + 1};
-
 enum { MA_ACUTE,
        MA_GRAV,
        MA_CIRC,
@@ -139,82 +115,6 @@ enum { MA_ACUTE,
        MA_O_ELIG
 };
 
-
-struct KeyToUnicode {
-  Key key;
-  uint32_t lowercase;
-  uint32_t uppercase;
-};
-
-static const KeyToUnicode keyToUnicodeTable[] = {
-  {Key_A_CIRC, U'â', U'Â'},
-  {Key_A_ACUTE, U'á', U'Á'},
-  {Key_A_GRAV, U'à', U'À'},
-  {Key_A_UML, U'ä', U'Ä'},
-  {Key_E_CIRC, U'ê', U'Ê'},
-  {Key_E_ACUTE, U'é', U'É'},
-  {Key_E_GRAV, U'è', U'È'},
-  {Key_E_UML, U'ë', U'Ë'},
-  {Key_I_CIRC, U'î', U'Î'},
-  {Key_I_ACUTE, U'í', U'Í'},
-  {Key_I_GRAV, U'ì', U'Ì'},
-  {Key_I_UML, U'ï', U'Ï'},
-  {Key_O_CIRC, U'ô', U'Ô'},
-  {Key_O_ACUTE, U'ó', U'Ó'},
-  {Key_O_GRAV, U'ò', U'Ò'},
-  {Key_O_UML, U'ö', U'Ö'},
-  {Key_U_CIRC, U'û', U'Û'},
-  {Key_U_ACUTE, U'ú', U'Ú'},
-  {Key_U_GRAV, U'ù', U'Ù'},
-  {Key_U_UML, U'ü', U'Ü'},
-  {Key_C_CEDIL, U'ç', U'Ç'},
-  {Key_O_ELIG, U'œ', U'Œ'},
-};
-
-const int8_t UNICODE_TABLE_SIZE = sizeof(keyToUnicodeTable) / sizeof(*keyToUnicodeTable);
-
-static constexpr uint32_t keyToUnicode(const Key &key, bool shifted) {
-  for (int i = 0; i < UNICODE_TABLE_SIZE; ++i) {
-    if (keyToUnicodeTable[i].key == key)
-      return shifted ? keyToUnicodeTable[i].uppercase : keyToUnicodeTable[i].lowercase;
-  }
-  return 0;
-}
-
-namespace kaleidoscope {
-namespace plugin {
-
-class WeurPlugin : public Plugin {
- public:
-  static constexpr uint32_t upperOffset = 0x00E0 - 0x00C0;
-
-  bool isShiftKeyHeld() {
-    for (Key key : kaleidoscope::live_keys.all()) {
-      if (key.isKeyboardShift()) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  EventHandlerResult onKeyEvent(KeyEvent &event) {
-    if (keyToggledOn(event.state)) {
-      uint32_t converted = keyToUnicode(event.key, isShiftKeyHeld());
-
-      if (converted == 0) return EventHandlerResult::OK;
-
-      kaleidoscope::Runtime.hid().keyboard().clearModifiers();
-      kaleidoscope::Runtime.hid().keyboard().sendReport();
-      ::Unicode.type(converted);
-    }
-
-    return EventHandlerResult::OK;
-  }
-};
-}  // namespace plugin
-}  // namespace kaleidoscope
-
-kaleidoscope::plugin::WeurPlugin WeurPlugin;
 
 /* This comment temporarily turns off astyle's indent enforcement
  *   so we can make the keymaps actually resemble the physical key layout better
@@ -267,11 +167,11 @@ LockLayer(PRIMARY), Key_Z   , Key_X   , Key_C   , Key_D   , Key_V, ___,
    ___, ___           , ___          , ___           ,
    ___,
 
-   ___, ___          , ___          , ___          , ___          , ___         , ___,
-   ___, M(MA_U_CIRC) , M(MA_U_UML)  , M(MA_U_GRAV) , M(MA_Y_UML)  , ___         , ___,
-        M(MA_E_ACUTE), M(MA_E_GRAV) , M(MA_E_CIRC) , M(MA_E_UML)  , ___         , ___,
-   ___, ___          , M(MA_I_CIRC) , M(MA_I_UML)  , M(MA_O_CIRC) , M(MA_O_UML) , ___,
-   ___, ___          , Key_Enter    , ___          ,
+   ___, ___ , ___          , ___          , ___          , ___         , ___,
+   ___, ___ , M(MA_U_CIRC) , M(MA_U_UML)  , M(MA_U_GRAV) , M(MA_Y_UML) , ___,
+        ___ , M(MA_E_ACUTE), M(MA_E_GRAV) , M(MA_E_CIRC) , M(MA_E_UML) , ___,
+   ___, ___ , M(MA_I_CIRC) , M(MA_I_UML)  , M(MA_O_CIRC) , M(MA_O_UML) , ___,
+   ___, ___ , Key_Enter    , ___          ,
    ___
 ),
 
@@ -294,19 +194,21 @@ LockLayer(PRIMARY), Key_Z   , Key_X   , Key_C   , Key_D   , Key_V, ___,
 
 [NUMNAV] = KEYMAP_STACKED
 (
-  ___,            Key_F1,  Key_F2,      Key_F3,      Key_F4,        Key_F5,           Key_Compose,
-  Key_Tab,         Key_1,   Key_2,       Key_3,       Key_4,         Key_5,             ___,
-  ___,             ___,     Key_Home,    Key_PageUp,  Key_End,       ___,
-  Key_PrintScreen, ___,     Key_Insert,  Key_PageDown, ___,          ___,               ___,
-  ___,             Key_Delete, ___,      ___,
-  ___,
+ ___             , Key_F1 , Key_F2     , Key_F3       , Key_F4  , Key_F5 , Key_Compose ,
+ Key_Tab         , Key_1  , Key_2      , Key_3        , Key_4   , Key_5  ,  ___        ,
+ ___             , ___    , Key_Home   , Key_PageUp   , Key_End , ___    ,
+ Key_PrintScreen , ___    , Key_Insert , Key_PageDown , ___     , ___    ,  ___        ,
 
-  Consumer_ScanPreviousTrack, Key_F6,        Key_F7,                   Key_F8,        Key_F9,                   Key_F10,                 Key_F11,
-  Consumer_ScanNextTrack,     Key_6,         Key_7,                    Key_8,         Key_9,                    Key_0,                   Key_F12,
-                               ___,          Key_LeftArrow,            Key_UpArrow,   Key_RightArrow,           Key_Period,              Key_Comma,
-  Key_Menu,                   Consumer_Mute, Consumer_VolumeDecrement, Key_DownArrow, Consumer_VolumeIncrement, Consumer_PlaySlashPause, Consumer_Stop,
-  ___, ___, Key_Space, ___,
-  ___
+ ___ , Key_Delete , ___,      ___,
+ ___,
+
+ Consumer_ScanPreviousTrack , Key_F6 , Key_F7, Key_F8, Key_F9, Key_F10, Key_F11,
+ Consumer_ScanNextTrack     , Key_6  , Key_7 , Key_8 , Key_9 , Key_0  , Key_F12,
+                               ___          , Key_LeftArrow           , Key_UpArrow   , Key_RightArrow          , Key_Period             , Key_Comma,
+ Key_Menu                   , Consumer_Mute , Consumer_VolumeDecrement, Key_DownArrow , Consumer_VolumeIncrement, Consumer_PlaySlashPause, Consumer_Stop,
+
+ ___, ___, Key_Space, ___,
+ ___
 ),
 
 [SPACE_QUKEYS] =  KEYMAP_STACKED
@@ -620,7 +522,6 @@ KALEIDOSCOPE_INIT_PLUGINS(
   // The macros plugin adds support for macros
   Macros,
   Unicode,
-  WeurPlugin,
   // Enables dynamic, Chrysalis-editable macros.
   //  DynamicMacros,
 
