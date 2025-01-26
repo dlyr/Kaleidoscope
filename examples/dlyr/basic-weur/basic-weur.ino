@@ -205,7 +205,7 @@ KEYMAPS(
    Key_Backtick,        Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
    Key_Tab,             Key_A, Key_S, Key_D, Key_F, Key_G,
 LockLayer(COLEMAK),     Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
-   OSL(SYMBOLS), Key_Backspace, OSM(LeftControl), OSM(LeftShift),
+   OSL(SYMBOLS),        Key_Backspace, OSM(LeftControl), OSM(LeftShift),
    ShiftToLayer(NUMNAV),
 
    Key_RightAlt,  Key_6, Key_7, Key_8,     Key_9,         Key_0,         Key_LEDEffectNext,
@@ -213,41 +213,42 @@ LockLayer(COLEMAK),     Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
                   Key_H, Key_J, Key_K,     Key_L,         Key_Semicolon, Key_Quote,
    Key_Compose,   Key_N, Key_M, Key_Comma, Key_Period,   Key_Slash,     Key_Minus,
    Key_LeftGui,   OSM(LeftAlt), LT(SPACE_QUKEYS, Spacebar), OSM(RightShift),
-   ShiftToLayer(WEUR)),
+   ShiftToLayer(WEUR)
+ ),
 
 [COLEMAK] = KEYMAP_STACKED
 (
-   ___,             ___  , ___  , ___  , ___  , ___  , ___,
-   ___,             Key_Q, Key_W, Key_F, Key_P, Key_B, ___,
-   ___,             Key_A, Key_R, Key_S, Key_T, Key_G,
-LockLayer(PRIMARY), Key_Z, Key_X, Key_C, Key_D, Key_V, ___,
+   ___            , ___     , ___     , ___     , ___     , ___  , ___,
+   ___            , Key_Q   , Key_W   , Key_F   , Key_P   , Key_B, ___,
+   ___            , GUI_T(A), ALT_T(R), SFT_T(S), CTL_T(T), Key_G,
+LockLayer(PRIMARY), Key_Z   , Key_X   , Key_C   , Key_D   , Key_V, ___,
    ___, ___, ___, ___,
    ___,
 
-   ___, ___  , ___  , ___      , ___       , ___          , ___       ,
-   ___, Key_J, Key_L, Key_U    , Key_Y     , Key_Semicolon, Key_Equals,
-        Key_M, Key_N, Key_E    , Key_I     , Key_O        , Key_Quote ,
-   ___, Key_K, Key_H, Key_Comma, Key_Period, Key_Slash    , Key_Minus ,
+   ___,   ___  , ___     , ___      , ___       , ___          , ___       ,
+   ___,   Key_J, Key_L   , Key_U    , Key_Y     , Key_Semicolon, Key_Equals,
+          Key_M, CTL_T(N), SFT_T(E) , ALT_T(I)  , GUI_T(O)     , Key_Quote ,
+   ___,   Key_K, Key_H   , Key_Comma, Key_Period, Key_Slash    , Key_Minus ,
    ___, ___, ___, ___,
    ___
 ),
 
 [WEUR]= KEYMAP_STACKED
 (
-   ___, ___                  , ___                  , ___                  , ___                  , ___                  , ___,
+   ___                  , ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
    ___, ___                  , ___                  , Key_E_UML            , Key_E_GRAV           , ___                  , ___,
    ___, Key_A_UML            , Key_A_GRAV           , Key_E_ACUTE          , Key_E_CIRC           , Key_U_CIRC           ,
    ___, Key_A_ACUTE          , Key_A_CIRC           , Key_C_CEDIL          , ___                  , ___                  , ___,
-   ___, ___                  , ___                  , ___                  ,
-   ___,
+   ___                  , ___                  , ___                  , ___                  ,
+   ___                  ,
 
-   ___, ___                  , ___                  , ___                  , ___                  , ___                  , ___,
+   ___                  , ___                  , ___                  , ___                  , ___                  , ___                  , ___                  ,
    ___, Key_U_GRAV           , Key_U_UML            , Key_I_UML            , Key_O_UML            , ___                  , ___,
         ___                  , ___                  , ___                  , ___                  , Key_O_CIRC           , ___,
    ___, ___                  , ___                  , ___                  , Key_O_ELIG           , ___                  , ___,
    ___, ___                  , Key_Enter            , ___                  ,
    ___
-),
+    ),
 
 [SYMBOLS] =  KEYMAP_STACKED
 (
@@ -299,7 +300,6 @@ LockLayer(PRIMARY), Key_Z, Key_X, Key_C, Key_D, Key_V, ___,
    ___        , ___        , ___        , ___        ,
    ___
 ),
-
 
 
 ) // KEYMAPS(
@@ -598,15 +598,15 @@ void setup() {
   //  kaleidoscope::plugin::Qukey(1, KeyAddr(2, 11), Key_NoKey), kaleidoscope::plugin::Qukey(1,
   //    KeyAddr(2, 12), Key_NoKey))
 
-//  QUKEYS(
-    // left-side modifiers
-          //  kaleidoscope::plugin::Qukey(COLEMAK, KeyAddr(2, 1), Key_LeftGui),      // A
-//    kaleidoscope::plugin::Qukey(COLEMAK, KeyAddr(2, 2), Key_LeftAlt),      // R
-//    kaleidoscope::plugin::Qukey(COLEMAK, KeyAddr(2, 3), Key_LeftControl),  // S
-//    kaleidoscope::plugin::Qukey(COLEMAK, KeyAddr(2, 4), Key_LeftShift),    // T
-//  )
+  //  QUKEYS(
+  // left-side modifiers
+  //  kaleidoscope::plugin::Qukey(COLEMAK, KeyAddr(2, 1), Key_LeftGui),      // A
+  //    kaleidoscope::plugin::Qukey(COLEMAK, KeyAddr(2, 2), Key_LeftAlt),      // R
+  //    kaleidoscope::plugin::Qukey(COLEMAK, KeyAddr(2, 3), Key_LeftControl),  // S
+  //    kaleidoscope::plugin::Qukey(COLEMAK, KeyAddr(2, 4), Key_LeftShift),    // T
+  //  )
   Qukeys.setHoldTimeout(250);
-  Qukeys.setOverlapThreshold(30);
+  Qukeys.setOverlapThreshold(80);
   //  Qukeys.setMinimumHoldTime(100);
   Qukeys.setMinimumPriorInterval(10);
   //  Qukeys.setMaxIntervalForTapRepeat(150);
