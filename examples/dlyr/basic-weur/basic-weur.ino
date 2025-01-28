@@ -126,19 +126,21 @@ KEYMAPS(
 
 [PRIMARY] = KEYMAP_STACKED
 (
-   ___,                 Key_1, Key_2, Key_3, Key_4, Key_5, Key_OneShotCancel,
-   Key_Backtick,        Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
-   Key_Tab,             Key_A, Key_S, Key_D, Key_F, Key_G,
-LockLayer(COLEMAK),     Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
-   OSL(SYMBOLS),        Key_Backspace, OSM(LeftControl), OSM(LeftShift),
-   ShiftToLayer(NUMNAV),
+ ___                , Key_1 , Key_2 , Key_3 , Key_4 , Key_5 , Key_OneShotCancel,
+ Key_Backtick       , Key_Q , Key_W , Key_E , Key_R , Key_T , Key_Tab,
+ Key_Tab            , Key_A , Key_S , Key_D , Key_F , Key_G ,
+ LockLayer(COLEMAK) , Key_Z , Key_X , Key_C , Key_V , Key_B , Key_Escape,
+ //
+ OSL(SYMBOLS),        Key_Backspace, OSM(LeftControl), OSM(LeftShift),
+ ShiftToLayer(NUMNAV),
 
-   Key_RightAlt,  Key_6, Key_7, Key_8,     Key_9,         Key_0,         Key_LEDEffectNext,
-   Key_Enter,     Key_Y, Key_U, Key_I,     Key_O,         Key_P,         Key_Equals,
-                  Key_H, Key_J, Key_K,     Key_L,         Key_Semicolon, Key_Quote,
-   Key_Compose,   Key_N, Key_M, Key_Comma, Key_Period,   Key_Slash,     Key_Minus,
-   Key_LeftGui,   OSM(LeftAlt), LT(SPACE_QUKEYS, Spacebar), OSM(RightShift),
-   ShiftToLayer(WEUR)
+ Key_RightAlt , Key_6 , Key_7 , Key_8     , Key_9      , Key_0         , Key_LEDEffectNext,
+ Key_Enter    , Key_Y , Key_U , Key_I     , Key_O      , Key_P         , Key_Equals,
+                Key_H , Key_J , Key_K     , Key_L      , Key_Semicolon , Key_Quote,
+ Key_Compose  , Key_N , Key_M , Key_Comma , Key_Period , Key_Slash     , Key_Minus,
+ //
+ Key_LeftGui,  OSM(LeftAlt), LT(SPACE_QUKEYS, Spacebar), OSM(RightShift),
+ ShiftToLayer(WEUR)
  ),
 
 [COLEMAK] = KEYMAP_STACKED
@@ -150,20 +152,20 @@ LockLayer(PRIMARY), Key_Z   , Key_X   , Key_C   , Key_D   , Key_V, ___,
    ___, ___, ___, ___,
    ___,
 
-   ___,   ___  , ___     , ___      , ___       , ___          , ___       ,
-   ___,   Key_J, Key_L   , Key_U    , Key_Y     , Key_Semicolon, Key_Equals,
-          Key_M, CTL_T(N), SFT_T(E) , ALT_T(I)  , GUI_T(O)     , Key_Quote ,
-   ___,   Key_K, Key_H   , Key_Comma, Key_Period, Key_Slash    , Key_Minus ,
+   ___, ___   , ___      , ___       , ___        , ___           , ___        ,
+   ___, Key_J , Key_L    , Key_U     , Key_Y      , Key_Semicolon , Key_Equals ,
+        Key_M , CTL_T(N) , SFT_T(E)  , ALT_T(I)   , GUI_T(O)      , Key_Quote  ,
+   ___, Key_K , Key_H    , Key_Comma , Key_Period , Key_Slash     , Key_Minus  ,
    ___, ___, ___, ___,
    ___
 ),
-// ____
-// àâä_
-// æœç_
+// _ _ _ _
+// à â ä _
+// æ œ ç _
 //
-// ûüùÿ
-// éèêë
-// îïôö
+// û ü ù ÿ
+// é è ê ë
+// î ï ô ö
 [WEUR]= KEYMAP_STACKED
 (
    ___, ___           , ___          , ___           , ___ , ___ , ___,
@@ -184,16 +186,16 @@ LockLayer(PRIMARY), Key_Z   , Key_X   , Key_C   , Key_D   , Key_V, ___,
 [SYMBOLS] =  KEYMAP_STACKED
 (
    ___, ___, ___, ___, ___, ___, ___,
-   ___, Key_ExclamationPoint, Key_LessThan,  Key_Equals, Key_GreaterThan, Key_Minus, ___,
-   ___, Key_Backslash,        Key_LeftParen, Key_Dollar, Key_RightParen,  Key_Plus,
-   ___, Key_Asterisk,         Key_At,        Key_Colon,  Key_Slash,       Key_Pound, ___,
+   ___, Key_ExclamationPoint , Key_LessThan  , Key_Equals , Key_GreaterThan , Key_Minus , ___ ,
+   ___, Key_Backslash        , Key_LeftParen , Key_Dollar , Key_RightParen  , Key_Plus  ,
+   ___, Key_Asterisk         , Key_At        , Key_Colon  , Key_Slash       , Key_Pound , ___ ,
    ___, ___, ___, ___,
    ___,
 
    ___, ___, ___, ___, ___, ___, ___,
-   ___, Key_Carat,    Key_LeftBracket,      Key_Underscore, Key_RightBracket,      Key_DoubleQuote, ___,
-        Key_Percent,  Key_LeftCurlyBracket, Key_Semicolon,  Key_RightCurlyBracket, Key_Quote, ___,
-   ___, Key_Backtick, Key_Pipe,             Key_Tilde,      Key_Ampersand,         Key_QuestionMark, ___,
+   ___, Key_Carat    , Key_LeftBracket      , Key_Underscore , Key_RightBracket      , Key_DoubleQuote  , ___ ,
+        Key_Percent  , Key_LeftCurlyBracket , Key_Semicolon  , Key_RightCurlyBracket , Key_Quote        , ___ ,
+   ___, Key_Backtick , Key_Pipe             , Key_Tilde      , Key_Ampersand         , Key_QuestionMark , ___ ,
    ___, ___, ___, ___,
    ___
     ),
@@ -204,34 +206,34 @@ LockLayer(PRIMARY), Key_Z   , Key_X   , Key_C   , Key_D   , Key_V, ___,
  Key_Tab         , Key_1  , Key_2      , Key_3        , Key_4   , Key_5  ,  ___        ,
  ___             , ___    , Key_Home   , Key_PageUp   , Key_End , ___    ,
  Key_PrintScreen , ___    , Key_Insert , Key_PageDown , ___     , ___    ,  ___        ,
-
+//
  ___ , Key_Delete , ___,      ___,
  ___,
-
- Consumer_ScanPreviousTrack , Key_F6 , Key_F7, Key_F8, Key_F9, Key_F10, Key_F11,
- Consumer_ScanNextTrack     , Key_6  , Key_7 , Key_8 , Key_9 , Key_0  , Key_F12,
-                               ___          , Key_LeftArrow           , Key_UpArrow   , Key_RightArrow          , Key_Period             , Key_Comma,
+//
+ Consumer_ScanPreviousTrack , Key_F6 , Key_F7         , Key_F8         , Key_F9, Key_F10, Key_F11,
+ Consumer_ScanNextTrack     , Key_6  , Key_7          , Key_8         , Key_9 , Key_0  , Key_F12,
+                              ___    , Key_LeftArrow  , Key_UpArrow   , Key_RightArrow          , Key_Period             , Key_Comma,
  Key_Menu                   , Consumer_Mute , Consumer_VolumeDecrement, Key_DownArrow , Consumer_VolumeIncrement, Consumer_PlaySlashPause, Consumer_Stop,
-
+//
  ___, ___, Key_Space, ___,
  ___
 ),
 
 [SPACE_QUKEYS] =  KEYMAP_STACKED
 (
-   ___        , ___        , ___        , ___        , ___        , ___        , ___        ,
-   ___        , ___        , ___        , ___        , ___        , ___        , ___        ,
-   ___        , M(MA_GRAV) , M(MA_ACUTE), M(MA_CIRC) , M(MA_UML)  , ___        ,
-   ___        , ___        , ___        , M(MA_CEDIL), ___        , ___        , ___        ,
-   Key_Compose, Key_Enter  , ___        , ___        ,
-   ___        ,
-
-   ___        , ___        , ___        , ___        , ___        , ___        , ___        ,
-   ___        , ___        , ___        , ___        , ___        , ___        , ___        ,
-                ___        , ___        , ___        , ___        , ___        , ___        ,
-   ___        , ___        , ___        , ___        , ___        , ___        , ___        ,
-   ___        , ___        , ___        , ___        ,
-   ___
+ ___         , ___        , ___         , ___         , ___        , ___        , ___        ,
+ ___         , ___        , ___         , ___         , ___        , ___        , ___        ,
+ ___         , M(MA_GRAV) , M(MA_ACUTE) , M(MA_CIRC)  , M(MA_UML)  , ___        ,
+ ___         , ___        , ___         , M(MA_CEDIL) , ___        , ___        , ___        ,
+ Key_Compose , Key_Enter  , ___         , ___         ,
+ ___         ,
+//
+ ___        , ___        , ___        , ___        , ___        , ___        , ___        ,
+ ___        , ___        , ___        , ___        , ___        , ___        , ___        ,
+              ___        , ___        , ___        , ___        , ___        , ___        ,
+ ___        , ___        , ___        , ___        , ___        , ___        , ___        ,
+ ___        , ___        , ___        , ___        ,
+ ___
 ),
 
 
@@ -607,9 +609,9 @@ void setup() {
   //    kaleidoscope::plugin::Qukey(COLEMAK, KeyAddr(2, 4), Key_LeftShift),    // T
   //  )
   Qukeys.setHoldTimeout(250);
-  Qukeys.setOverlapThreshold(80);
+  Qukeys.setOverlapThreshold(90);
   //  Qukeys.setMinimumHoldTime(100);
-  Qukeys.setMinimumPriorInterval(10);
+  Qukeys.setMinimumPriorInterval(20);
   //  Qukeys.setMaxIntervalForTapRepeat(150);
   //
   // First, call Kaleidoscope's internal setup function
