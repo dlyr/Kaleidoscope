@@ -60,7 +60,6 @@
 #define Key_QuestionMark LSHIFT(Key_Slash)
 #define Key_RithtParen LSHIFT(Key_0)
 #define Key_Tilde LSHIFT(Key_Backtick)
-//#define Key_Tilde LSHIFT(Key_NonUsPound)
 #define Key_Underscore LSHIFT(Key_Minus)
 
 #define Key_Compose Key_CapsLock
@@ -139,7 +138,7 @@ KEYMAPS(
                 Key_H , Key_J , Key_K     , Key_L      , Key_Semicolon , Key_Quote,
  Key_Compose  , Key_N , Key_M , Key_Comma , Key_Period , Key_Slash     , Key_Minus,
  //
- Key_LeftGui,  OSM(LeftAlt), LT(SPACE_QUKEYS, Spacebar), OSM(RightShift),
+ Key_LeftGui,  OSM(LeftAlt), LT(SPACE_QUKEYS, Spacebar), ShiftToLayer(WEUR),
  ShiftToLayer(WEUR)
  ),
 
@@ -159,7 +158,7 @@ LockLayer(PRIMARY), Key_Z   , Key_X   , Key_C   , Key_D   , Key_V, ___,
    ___, ___, ___, ___,
    ___
 ),
-// _ _ _ _
+// ` ' ^ ,
 // à â ä _
 // æ œ ç _
 //
@@ -168,18 +167,18 @@ LockLayer(PRIMARY), Key_Z   , Key_X   , Key_C   , Key_D   , Key_V, ___,
 // î ï ô ö
 [WEUR]= KEYMAP_STACKED
 (
-   ___, ___           , ___          , ___           , ___ , ___ , ___,
-   ___, ___           , ___          , ___           , ___ , ___ , ___,
-   ___, M(MA_A_GRAV)  , M(MA_A_CIRC) , M(MA_A_UML)   , ___ , ___ ,
-   ___, M(MA_A_ELIG)  , M(MA_O_ELIG) , M(MA_C_CEDIL) , ___ , ___ , ___,
-   ___, ___           , ___          , ___           ,
+   ___, ___          , ___          , ___           , ___         , ___ , ___,
+   ___, M(MA_GRAV)   , M(MA_ACUTE)  , M(MA_CIRC)    , M(MA_CEDIL) , ___ , ___,
+   ___, M(MA_A_GRAV) , M(MA_A_CIRC) , M(MA_A_UML)   , Key_Compose , ___ ,
+   ___, M(MA_A_ELIG) , M(MA_O_ELIG) , M(MA_C_CEDIL) , ___         , ___ , ___,
+   ___, ___          , ___          , ___           ,
    ___,
 
    ___, ___ , ___          , ___          , ___          , ___         , ___,
    ___, ___ , M(MA_U_CIRC) , M(MA_U_UML)  , M(MA_U_GRAV) , M(MA_Y_UML) , ___,
         ___ , M(MA_E_ACUTE), M(MA_E_GRAV) , M(MA_E_CIRC) , M(MA_E_UML) , ___,
    ___, ___ , M(MA_I_CIRC) , M(MA_I_UML)  , M(MA_O_CIRC) , M(MA_O_UML) , ___,
-   ___, ___ , Key_Enter    , ___          ,
+   ___, ___ , ___          , ___          ,
    ___
 ),
 
@@ -202,19 +201,22 @@ LockLayer(PRIMARY), Key_Z   , Key_X   , Key_C   , Key_D   , Key_V, ___,
 
 [NUMNAV] = KEYMAP_STACKED
 (
+ // two top row function and numbers
  ___             , Key_F1 , Key_F2     , Key_F3       , Key_F4  , Key_F5 , Key_Compose ,
  Key_Tab         , Key_1  , Key_2      , Key_3        , Key_4   , Key_5  ,  ___        ,
- ___             , ___    , Key_Home   , Key_PageUp   , Key_End , ___    ,
- Key_PrintScreen , ___    , Key_Insert , Key_PageDown , ___     , ___    ,  ___        ,
-//
+ // next is navigation and media
+ ___             , ___ , Key_Home   , Key_PageUp   , Key_End , ___ ,
+ Key_PrintScreen , ___ , Key_Insert , Key_PageDown , ___     , ___ , ___ ,
+ //
  ___ , Key_Delete , ___,      ___,
  ___,
-//
- Consumer_ScanPreviousTrack , Key_F6 , Key_F7         , Key_F8         , Key_F9, Key_F10, Key_F11,
- Consumer_ScanNextTrack     , Key_6  , Key_7          , Key_8         , Key_9 , Key_0  , Key_F12,
-                              ___    , Key_LeftArrow  , Key_UpArrow   , Key_RightArrow          , Key_Period             , Key_Comma,
- Key_Menu                   , Consumer_Mute , Consumer_VolumeDecrement, Key_DownArrow , Consumer_VolumeIncrement, Consumer_PlaySlashPause, Consumer_Stop,
-//
+ // two top
+ Consumer_ScanPreviousTrack , Key_F6 , Key_F7 , Key_F8 , Key_F9, Key_F10, Key_F11,
+ Consumer_ScanNextTrack     , Key_6  , Key_7  , Key_8  , Key_9 , Key_0  , Key_F12,
+ // next
+            ___           , Key_LeftArrow            , Key_UpArrow   , Key_RightArrow           , Key_Period              , Key_Comma     ,
+ Key_Menu , Consumer_Mute , Consumer_VolumeDecrement , Key_DownArrow , Consumer_VolumeIncrement , Consumer_PlaySlashPause , Consumer_Stop ,
+ //
  ___, ___, Key_Space, ___,
  ___
 ),
@@ -432,23 +434,7 @@ static void enterHardwareTestMode(uint8_t combo_index) {
 enum { PROTOCOLE,
        TEST_MODE,
        KEYMAP_SOURCE,
-       //       A_CIRC,
-       E_ACUTE
 };
-
-
-void typeSpecialChar(uint8_t combo_index) {
-  switch (combo_index) {
-  case E_ACUTE:
-    Macros.tap(Key_CapsLock);
-    Macros.tap(Key_Quote);
-    Macros.tap(Key_E);
-    break;
-  default:
-    Macros.type(PSTR("It's a kind of magic!"));
-    break;
-  }
-}
 
 USE_MAGIC_COMBOS({.action = toggleKeyboardProtocol,
                   // Left Fn + Esc + Shift
@@ -459,9 +445,6 @@ USE_MAGIC_COMBOS({.action = toggleKeyboardProtocol,
                  {.action = toggleKeymapSource,
                   // Left Fn + Prog + Shift
                   .keys = {R3C6, R0C0, R3C7}},
-                 //N + E
-                 //   {.action = typeSpecialChar,
-                 //                  .keys = {R2C11, R2C12}}
 );
 
 
@@ -609,9 +592,9 @@ void setup() {
   //    kaleidoscope::plugin::Qukey(COLEMAK, KeyAddr(2, 4), Key_LeftShift),    // T
   //  )
   Qukeys.setHoldTimeout(250);
-  Qukeys.setOverlapThreshold(90);
+  Qukeys.setOverlapThreshold(95);
   //  Qukeys.setMinimumHoldTime(100);
-  Qukeys.setMinimumPriorInterval(20);
+  Qukeys.setMinimumPriorInterval(30);
   //  Qukeys.setMaxIntervalForTapRepeat(150);
   //
   // First, call Kaleidoscope's internal setup function
