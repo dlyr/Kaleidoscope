@@ -158,7 +158,7 @@ LockLayer(PRIMARY), Key_Z   , Key_X   , Key_C   , Key_D   , Key_V, ___,
    ___, ___, ___, ___,
    ___
 ),
-// ` ' ^ ,
+// ` ' ^ " ,
 // à â ä _
 // æ œ ç _
 //
@@ -168,7 +168,7 @@ LockLayer(PRIMARY), Key_Z   , Key_X   , Key_C   , Key_D   , Key_V, ___,
 [WEUR]= KEYMAP_STACKED
 (
    ___, ___          , ___          , ___           , ___         , ___ , ___,
-   ___, M(MA_GRAV)   , M(MA_ACUTE)  , M(MA_CIRC)    , M(MA_CEDIL) , ___ , ___,
+   ___, M(MA_GRAV)   , M(MA_ACUTE)  , M(MA_CIRC)    , M(MA_UML)   , M(MA_CEDIL) , ___,
    ___, M(MA_A_GRAV) , M(MA_A_CIRC) , M(MA_A_UML)   , Key_Compose , ___ ,
    ___, M(MA_A_ELIG) , M(MA_O_ELIG) , M(MA_C_CEDIL) , ___         , ___ , ___,
    ___, ___          , ___          , ___           ,
